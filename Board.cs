@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,18 +19,122 @@ namespace Connect_four
         {
             _board = board;
             _piece = piece;
-            _boardPositions = new int[6, 7];
-            for (int i = 0; i < 6; i++)
-                for (int j = 0; j < 7; j++)
+            _boardPositions = new int[7, 6];
+            for (int i = 0; i < 7; i++)
+                for (int j = 0; j < 6; j++)
                     _boardPositions[i, j] = 0;
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_board, new Rectangle(0, 0, 800, 600), Color.White);
-            foreach (int coordinate in _boardPositions)
+            for (int i = 0; i < 7; i++)
             {
-
+                for (int j = 0; j < 6; j++)
+                {
+                    if (_boardPositions[i,j] == 0)
+                        spriteBatch.Draw(_piece, new Rectangle((6+ (i*114)),(0 + (j*100)), 100, 100), Color.White);
+                    else if (_boardPositions[i, j] == 1)
+                        spriteBatch.Draw(_piece, new Rectangle((6 + (i * 114)), (0 + (j * 100)), 100, 100), Color.Red);
+                    else if (_boardPositions[i, j] == 2)
+                        spriteBatch.Draw(_piece, new Rectangle((6 + (i * 114)), (0 + (j * 100)), 100, 100), Color.Black);
+                    else if (_boardPositions[i, j] == 3)
+                        spriteBatch.Draw(_piece, new Rectangle((6 + (i * 114)), (0 + (j * 100)), 100, 100), Color.Yellow);
+                }
             }
+            spriteBatch.Draw(_board, new Rectangle(0, 0, 800, 600), Color.White);
+        }
+        public bool PlayerTurn(MouseState mouseState, int player)
+        {
+            bool moved = false;
+            if (mouseState.X <= 115){
+                for (int i = 5; i >= 0; i--)
+                {
+                    if (_boardPositions[0,i] == 0 && !moved){
+                        moved = true;
+                        _boardPositions[0,i] = player;
+                    }
+                }
+            }
+            else if (mouseState.X <= 230){
+                for (int i = 5; i >= 0; i--)
+                {
+                    if (_boardPositions[1, i] == 0&& !moved){
+                        moved = true;
+                        _boardPositions[1, i] = player;
+                    }
+                }
+            }
+            else if (mouseState.X <= 341){
+                for (int i = 5; i >= 0; i--)
+                {
+                    if (_boardPositions[2, i] == 0 && !moved){
+                        moved = true;
+                        _boardPositions[2, i] = player;
+                    }
+                }
+            }
+            else if (mouseState.X <= 456){
+                for (int i = 5; i >= 0; i--)
+                {
+                    if (_boardPositions[3, i] == 0 && !moved){
+                        moved = true;
+                        _boardPositions[3, i] = player;
+                    }
+                }
+            }
+            else if(mouseState.X <= 569){
+                for (int i = 5; i >= 0; i--)
+                {
+                    if (_boardPositions[4, i] == 0 && !moved){
+                        moved = true;
+                        _boardPositions[4, i] = player;
+                    }
+                }
+            }
+            else if (mouseState.X <= 681){
+                for (int i = 5; i >= 0; i--)
+                {
+                    if (_boardPositions[5, i] == 0 && !moved){
+                        moved = true;
+                        _boardPositions[5, i] = player;
+                    }
+                }
+            }
+            else{
+                for (int i = 5; i >= 0; i--)
+                {
+                    if (_boardPositions[6, i] == 0 && !moved){
+                        moved = true;
+                        _boardPositions[6, i] = player;
+                    }
+                }
+            }
+            return moved;
+        }
+        public int CheckForFour()
+        {
+            int winner = 0;
+
+            for (int p = 1; p < 3; p++)
+            {
+                for (int i = 0; i < 7; i++)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        if (_boardPositions[i,j] == p && _boardPositions[i, j+1] == p && _boardPositions[i, j + 2] == p && _boardPositions[i, j + 3] == p)
+                            winner = p;
+                    }
+                }
+                for (int i = 0; i < 6; i++)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (_boardPositions[j, i] == p && _boardPositions[j + 1, i] == p && _boardPositions[j + 2, i] == p && _boardPositions[j + 3,i] == p)
+                            winner = p;
+                    }
+                }
+            }
+
+            return winner;
         }
     }
 }

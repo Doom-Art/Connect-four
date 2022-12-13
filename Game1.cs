@@ -14,7 +14,9 @@ namespace Connect_four
         Texture2D gamePiece;
         int playerTurn;
         MouseState mouseState;
+        MouseState prevMouseState;
         Board board;
+        bool gameWon;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -25,7 +27,7 @@ namespace Connect_four
         protected override void Initialize()
         {
             playerTurn = 1;
-            
+            gameWon = false;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 600;
             _graphics.ApplyChanges();
@@ -42,18 +44,33 @@ namespace Connect_four
 
         protected override void Update(GameTime gameTime)
         {
+            prevMouseState = mouseState;
             mouseState = Mouse.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            if (!gameWon && mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
+                if(board.PlayerTurn(mouseState, playerTurn)){
+                    if (playerTurn == 1)
+                        playerTurn = 2;
+                    else if (playerTurn == 2)
+                        playerTurn = 1;
+                }
+                int winner = board.CheckForFour();
+                if (winner != 0){
+                    this.Window.Title = $"Player {winner} wins";
+                    gameWon = true;
+                }
+            }
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin();
-            _spriteBatch.Draw(gameBoard, new Rectangle(0,0,800,600), Color.Black);
+
+            board.Draw(_spriteBatch);
 
             _spriteBatch.End();
             base.Draw(gameTime);
