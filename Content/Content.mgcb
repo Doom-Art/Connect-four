@@ -37,6 +37,16 @@
 /processorParam:TextureFormat=Color
 /build:Connect4Board.png
 
+#begin Milky Honey.ttf
+/copy:Milky Honey.ttf
+
+#begin MilkyHoney.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:MilkyHoney.spritefont
+
 #begin rectangle.png
 /importer:TextureImporter
 /processor:TextureProcessor

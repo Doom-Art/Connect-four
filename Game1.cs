@@ -12,11 +12,21 @@ namespace Connect_four
 
         Texture2D gameBoard;
         Texture2D gamePiece;
+        Texture2D mouseGamePiece;
         int playerTurn;
         MouseState mouseState;
         MouseState prevMouseState;
         Board board;
         bool gameWon;
+        SpriteFont font;
+        int winner;
+        enum Screen
+        {
+            Menu,
+            Connect4
+        }
+        Screen screen;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -26,10 +36,12 @@ namespace Connect_four
 
         protected override void Initialize()
         {
+            winner = 0;
+            screen = Screen.Connect4;
             playerTurn = 1;
             gameWon = false;
             _graphics.PreferredBackBufferWidth = 800;
-            _graphics.PreferredBackBufferHeight = 600;
+            _graphics.PreferredBackBufferHeight = 700;
             _graphics.ApplyChanges();
             base.Initialize();
             board = new Board(gameBoard, gamePiece);
@@ -40,6 +52,7 @@ namespace Connect_four
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             gameBoard = Content.Load<Texture2D>("Connect4Board");
             gamePiece = Content.Load<Texture2D>("circle");
+            font = Content.Load<SpriteFont>("MilkyHoney");
         }
 
         protected override void Update(GameTime gameTime)
@@ -55,10 +68,14 @@ namespace Connect_four
                     else if (playerTurn == 2)
                         playerTurn = 1;
                 }
-                int winner = board.CheckForFour();
+                winner = board.CheckForFour();
                 if (winner != 0){
                     this.Window.Title = $"Player {winner} wins";
                     gameWon = true;
+                }
+                if (board.CheckStalemate()){
+                    gameWon = true;
+                    winner = -1;
                 }
             }
 
@@ -67,10 +84,26 @@ namespace Connect_four
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.White);
             _spriteBatch.Begin();
 
-            board.Draw(_spriteBatch);
+            if (screen == Screen.Connect4){
+                if (!gameWon){
+                    if (playerTurn == 1)
+                        _spriteBatch.DrawString(font, "Player 1's Turn", new Vector2(110, 10), Color.Red);
+                    else if (playerTurn == 2)
+                        _spriteBatch.DrawString(font, "Player 2's Turn", new Vector2(110, 10), Color.Black);
+                }
+                else{
+                    if (winner == 1)
+                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(115, 10), Color.Red);
+                    else if (winner == 2)
+                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(115, 10), Color.Black);
+                    else if (winner == -1)
+                        _spriteBatch.DrawString(font, "No one wins", new Vector2(115, 10), Color.Turquoise);
+                }
+                board.Draw(_spriteBatch);
+            }
 
             _spriteBatch.End();
             base.Draw(gameTime);
