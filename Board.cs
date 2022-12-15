@@ -110,9 +110,12 @@ namespace Connect_four
             }
             return moved;
         }
+        /// <summary>
+        /// Checks if game is locked in a stalemate
+        /// </summary>
+        /// <returns> True if stalemate, False if no stalemate</returns>
         public bool CheckStalemate()
         {
-            //Checking if any moves can be made
             bool stalemate = true;
             for (int i =0; i<7; i++)
                 for(int j = 0; j<6; j++)
@@ -151,6 +154,15 @@ namespace Connect_four
             }
 
             return winner;
+        }
+        /// <summary>
+        /// Resets the board to an empty state
+        /// </summary>
+        public void Reset()
+        {
+            for (int i = 0; i < 7; i++)
+                for (int j = 0; j < 6; j++)
+                    _boardPositions[i, j] = 0;
         }
     }
 }

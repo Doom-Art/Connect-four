@@ -12,13 +12,18 @@ namespace Connect_four
 
         Texture2D gameBoard;
         Texture2D gamePiece;
-        Texture2D mouseGamePiece;
         int playerTurn;
         MouseState mouseState;
         MouseState prevMouseState;
         Board board;
         bool gameWon;
         SpriteFont font;
+        Texture2D connect4Play;
+        Texture2D pacPlay;
+        Rectangle pacPlayRect;
+        Rectangle c4Rect;
+        float seconds;
+        float startTime;
         int winner;
         enum Screen
         {
@@ -36,10 +41,9 @@ namespace Connect_four
 
         protected override void Initialize()
         {
-            winner = 0;
-            screen = Screen.Connect4;
-            playerTurn = 1;
-            gameWon = false;
+            screen = Screen.Menu;
+            pacPlayRect = new Rectangle(150, 290, 200, 200);
+            c4Rect = new Rectangle(450, 290, 200, 200);
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
             _graphics.ApplyChanges();
@@ -51,21 +55,33 @@ namespace Connect_four
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             gameBoard = Content.Load<Texture2D>("Connect4Board");
+            pacPlay = Content.Load<Texture2D>("pacPlay");
+            connect4Play = Content.Load<Texture2D>("Connect4Play");
             gamePiece = Content.Load<Texture2D>("circle");
             font = Content.Load<SpriteFont>("MilkyHoney");
         }
 
         protected override void Update(GameTime gameTime)
         {
+            seconds = (float)gameTime.TotalGameTime.TotalSeconds - startTime;
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
+            this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (screen == Screen.Menu){
-
+                if(mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
+                    if (c4Rect.Contains(mouseState.X, mouseState.Y)){
+                        screen = Screen.Connect4;
+                        winner = 0;
+                        playerTurn = 1;
+                        gameWon = false;
+                        IsMouseVisible = false;
+                        board.Reset();
+                    }
+                }
             }
             else if(screen == Screen.Connect4){
-                IsMouseVisible = false;
                 if (!gameWon && mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                     if (board.PlayerTurn(mouseState, playerTurn)){
                         if (playerTurn == 1)
@@ -77,11 +93,17 @@ namespace Connect_four
                     if (winner != 0){
                         this.Window.Title = $"Player {winner} wins";
                         gameWon = true;
+                        startTime = (float)gameTime.TotalGameTime.TotalSeconds;
                     }
                     if (board.CheckStalemate()){
                         gameWon = true;
                         winner = -1;
+                        startTime = (float)gameTime.TotalGameTime.TotalSeconds;
                     }
+                }
+                else if(gameWon && seconds >= 6){
+                    screen = Screen.Menu;
+                    IsMouseVisible=true;
                 }
             }
             
@@ -90,15 +112,25 @@ namespace Connect_four
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
             _spriteBatch.Begin();
-
-            if (screen == Screen.Connect4){
+            if (screen == Screen.Menu){
+                GraphicsDevice.Clear(Color.Turquoise);
+                _spriteBatch.DrawString(font, "Welcome to the mini ", new Vector2(30, 20), Color.Black);
+                _spriteBatch.DrawString(font, "Arcade", new Vector2(280, 90), Color.Black);
+                _spriteBatch.Draw(pacPlay, pacPlayRect, Color.White);
+                _spriteBatch.Draw(connect4Play, c4Rect, Color.White);
+            }
+            else if (screen == Screen.Connect4){
+                GraphicsDevice.Clear(Color.White);
                 board.Draw(_spriteBatch);
-                if (playerTurn == 1)
+                if (playerTurn == 1){
+                    _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 40, mouseState.Y - 40, 75, 75), Color.Blue);
                     _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), Color.Red);
-                else if (playerTurn == 2)
+                }
+                else if (playerTurn == 2){
+                    _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 40, mouseState.Y - 40, 75, 75), Color.White);
                     _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), Color.Black);
+                }
                 if (!gameWon){
                     if (playerTurn == 1)
                         _spriteBatch.DrawString(font, "Player 1's Turn", new Vector2(110, 10), Color.Red);
@@ -106,12 +138,16 @@ namespace Connect_four
                         _spriteBatch.DrawString(font, "Player 2's Turn", new Vector2(110, 10), Color.Black);
                 }
                 else{
-                    if (winner == 1)
+                    if (winner == 1){
+                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(112, 7), Color.Gold);
                         _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(115, 10), Color.Red);
-                    else if (winner == 2)
+                    }
+                    else if (winner == 2){
+                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(112, 7), Color.Gold);
                         _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(115, 10), Color.Black);
+                    }
                     else if (winner == -1)
-                        _spriteBatch.DrawString(font, "No one wins", new Vector2(115, 10), Color.Turquoise);
+                        _spriteBatch.DrawString(font, "No one wins", new Vector2(120, 10), Color.Turquoise);
                 }
             }
 
