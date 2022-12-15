@@ -61,24 +61,30 @@ namespace Connect_four
             mouseState = Mouse.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if (!gameWon && mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
-                if(board.PlayerTurn(mouseState, playerTurn)){
-                    if (playerTurn == 1)
-                        playerTurn = 2;
-                    else if (playerTurn == 2)
-                        playerTurn = 1;
-                }
-                winner = board.CheckForFour();
-                if (winner != 0){
-                    this.Window.Title = $"Player {winner} wins";
-                    gameWon = true;
-                }
-                if (board.CheckStalemate()){
-                    gameWon = true;
-                    winner = -1;
+            if (screen == Screen.Menu){
+
+            }
+            else if(screen == Screen.Connect4){
+                IsMouseVisible = false;
+                if (!gameWon && mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
+                    if (board.PlayerTurn(mouseState, playerTurn)){
+                        if (playerTurn == 1)
+                            playerTurn = 2;
+                        else if (playerTurn == 2)
+                            playerTurn = 1;
+                    }
+                    winner = board.CheckForFour();
+                    if (winner != 0){
+                        this.Window.Title = $"Player {winner} wins";
+                        gameWon = true;
+                    }
+                    if (board.CheckStalemate()){
+                        gameWon = true;
+                        winner = -1;
+                    }
                 }
             }
-
+            
             base.Update(gameTime);
         }
 
@@ -88,6 +94,11 @@ namespace Connect_four
             _spriteBatch.Begin();
 
             if (screen == Screen.Connect4){
+                board.Draw(_spriteBatch);
+                if (playerTurn == 1)
+                    _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), Color.Red);
+                else if (playerTurn == 2)
+                    _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), Color.Black);
                 if (!gameWon){
                     if (playerTurn == 1)
                         _spriteBatch.DrawString(font, "Player 1's Turn", new Vector2(110, 10), Color.Red);
@@ -102,7 +113,6 @@ namespace Connect_four
                     else if (winner == -1)
                         _spriteBatch.DrawString(font, "No one wins", new Vector2(115, 10), Color.Turquoise);
                 }
-                board.Draw(_spriteBatch);
             }
 
             _spriteBatch.End();
