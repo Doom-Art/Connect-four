@@ -10,27 +10,34 @@ namespace Connect_four
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        Texture2D gameBoard;
-        Texture2D gamePiece;
-        int playerTurn;
+        //General Variables:
         MouseState mouseState;
         MouseState prevMouseState;
-        Board board;
-        bool gameWon;
-        SpriteFont font;
-        Texture2D connect4Play;
-        Texture2D pacPlay;
-        Rectangle pacPlayRect;
-        Rectangle c4Rect;
+        Texture2D questionIcon;
         float seconds;
         float startTime;
-        int winner;
+        SpriteFont font;
         enum Screen
         {
             Menu,
             Connect4
         }
         Screen screen;
+
+        //Menu Variables:
+        Texture2D connect4Play;
+        Texture2D pacPlay;
+        Rectangle pacPlayRect;
+        Rectangle c4Rect;
+
+        // Connect 4 variables:
+        Texture2D gameBoard;
+        Texture2D gamePiece;
+        int playerTurn;
+        int winner;
+        Board board;
+        bool gameWon;
+        
 
         public Game1()
         {
