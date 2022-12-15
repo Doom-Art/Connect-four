@@ -61,6 +61,7 @@ namespace Connect_four
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            questionIcon = Content.Load<Texture2D>("questionIcon");
             gameBoard = Content.Load<Texture2D>("Connect4Board");
             pacPlay = Content.Load<Texture2D>("pacPlay");
             connect4Play = Content.Load<Texture2D>("Connect4Play");
