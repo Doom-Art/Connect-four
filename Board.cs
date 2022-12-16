@@ -20,9 +20,6 @@ namespace Connect_four
             _board = board;
             _piece = piece;
             _boardPositions = new int[7, 6];
-            for (int i = 0; i < 7; i++)
-                for (int j = 0; j < 6; j++)
-                    _boardPositions[i, j] = 0;
         }
         public void Draw(SpriteBatch spriteBatch)
         {
