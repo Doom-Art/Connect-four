@@ -9,6 +9,6 @@ namespace Connect_four
 {
     internal class Barrier
     {
-        private Texture2D _
+        private Texture2D _texture;
     }
 }
