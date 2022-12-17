@@ -14,6 +14,7 @@ namespace Connect_four
         private Texture2D _board;
         private Texture2D _piece;
         private int[,] _boardPositions;
+        public static Random rand = new Random();
 
         public Board(Texture2D board, Texture2D piece)
         {
@@ -38,6 +39,20 @@ namespace Connect_four
                 }
             }
             spriteBatch.Draw(_board, new Rectangle(0, 100, 800, 600), Color.White);
+        }
+        public bool PlayerTurnAI(int player)
+        {
+            bool moved = false;
+            int row = rand.Next(0, 7);
+            for (int i = 5; i >= 0; i--)
+            {
+                if (_boardPositions[row, i] == 0 && !moved)
+                {
+                    moved = true;
+                    _boardPositions[row, i] = player;
+                }
+            }
+            return moved;
         }
         public bool PlayerTurn(MouseState mouseState, int player)
         {
