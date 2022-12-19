@@ -16,127 +16,75 @@ namespace Connect_four
         private Texture2D _pacLeft;
         private Texture2D _pacRight;
         private Texture2D _pacCurrentTex;
-        private Texture2D _pacCloseMouth;
         private Rectangle _location;
-        private int _speed;
-        private bool _mouthOpen;
-        public Pacman(Texture2D pacUp, Texture2D pacDown, Texture2D pacLeft, Texture2D pacRight, Rectangle location, Texture2D pacCloseMouth)
+        private Vector2 _speed;
+        private Vector2 _left;
+        private Vector2 _right;
+        private Vector2 _up;
+        private Vector2 _down;
+        public Pacman(Texture2D pacUp, Texture2D pacDown, Texture2D pacLeft, Texture2D pacRight, Rectangle location)
         {
             _pacUp = pacUp;
             _pacDown = pacDown;
             _pacLeft = pacLeft;
             _pacRight = pacRight;
             _location = location;
-            _speed = 2;
+            _speed = new Vector2(0,0);
             _pacCurrentTex = _pacRight;
-            _mouthOpen = false;
-            _pacCloseMouth = pacCloseMouth;
+            _left = new Vector2(-2, 0);
+            _right = new Vector2(2, 0);
+            _up = new Vector2(0, -2);
+            _down = new Vector2(0, 2);
         }
-        public void Mouth()
+        public void Move()
         {
-            if (_mouthOpen)
-                _mouthOpen = false;
-            else
-                _mouthOpen = true;
+            _location.X += (int)_speed.X;
+            _location.Y += (int)_speed.Y;
         }
-        public void Move(KeyboardState keyboardState)
+        public void Update(KeyboardState keyboardState)
         {
             if (keyboardState.IsKeyDown(Keys.Left)){
-                _location.X -= _speed;
+                _speed = _left;
                 _pacCurrentTex = _pacLeft;
             }
             else if (keyboardState.IsKeyDown(Keys.Right)){
-                _location.X += _speed;
+                _speed = _right;
                 _pacCurrentTex = _pacRight;
             }
             else if (keyboardState.IsKeyDown(Keys.Up)){
-                _location.Y -= _speed;
+                _speed = _up;
                 _pacCurrentTex = _pacUp;
             }
             else if (keyboardState.IsKeyDown(Keys.Down)){
-                _location.Y += _speed;
+                _speed = _down;
                 _pacCurrentTex = _pacDown;
             }
         }
-        public void Intersects(Rectangle barrier, KeyboardState keyboardState)
+        public void Intersects(Rectangle barrier)
         {
-            if (keyboardState.IsKeyDown(Keys.Left)){
+            if (_speed == _left){
                 if (_location.Intersects(barrier))
                     _location.X = barrier.Right;
             }
-            if (keyboardState.IsKeyDown(Keys.Right)){
+            else if (_speed == _right){
                 if (_location.Intersects(barrier)){
                     _location.X = barrier.Left - _location.Width;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.Up)){
+            else if (_speed == _up){
                 if (_location.Intersects(barrier)){
                     _location.Y = barrier.Bottom;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.Down)){
-                if (_location.Intersects(barrier)){
-                    _location.Y = barrier.Top - _location.Height;
-                }
-            }
-        }
-        /*public void Intersects(Rectangle barrier)
-        {
-            
-            if (_location.Intersects(barrier))
-                _location.X = barrier.Right;
-            if (_location.Intersects(barrier)){
-                _location.X = barrier.Left - _location.Width;
-            }
-            if (_location.Intersects(barrier)){
-                _location.Y = barrier.Bottom;
-            }
-            if (_location.Intersects(barrier)){
-                _location.Y = barrier.Top - _location.Height;
-            }
-        }*/
-        /// <summary>
-        /// Moves pacman based on Up, Down, Left, Right arrows and checks for collisions with barriers
-        /// </summary>
-        /// <param name="keyboardState">The keyboard's current state</param>
-        /// <param name="barrier">any barriers that should not be crossable</param>
-        public void Move(KeyboardState keyboardState, Rectangle barrier)
-        {
-            if (keyboardState.IsKeyDown(Keys.Left)){
-                _location.X -= _speed;
-                _pacCurrentTex = _pacLeft;
-                if (_location.Intersects(barrier))
-                    _location.X = barrier.Right;
-            }
-            if (keyboardState.IsKeyDown(Keys.Right)){
-                _location.X += _speed;
-                _pacCurrentTex = _pacRight;
-                if (_location.Intersects(barrier)){
-                    _location.X = barrier.Left - _location.Width;
-                }
-            }
-            if (keyboardState.IsKeyDown(Keys.Up)){
-                _location.Y -= _speed;
-                _pacCurrentTex = _pacUp;
-                if (_location.Intersects(barrier)){
-                    _location.Y = barrier.Bottom;
-                }
-            }
-            if (keyboardState.IsKeyDown(Keys.Down)){
-                _location.Y += _speed;
-                _pacCurrentTex = _pacDown;
+            else if (_speed == _down){
                 if (_location.Intersects(barrier)){
                     _location.Y = barrier.Top - _location.Height;
                 }
             }
         }
         public void Draw(SpriteBatch spriteBatch)
-        {
-            if(_mouthOpen)
-                spriteBatch.Draw(_pacCurrentTex, _location, Color.White);
-            else
-                spriteBatch.Draw(_pacCloseMouth, _location, Color.White);
-
+        { 
+            spriteBatch.Draw(_pacCurrentTex, _location, Color.White);
         }
     }
 }

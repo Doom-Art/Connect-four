@@ -54,7 +54,7 @@ namespace Connect_four
         Texture2D pacRight;
         Texture2D barrierTex;
         Texture2D coinTex;
-        Texture2D pacCloseMouth;
+        Texture2D roadBackground;
         
 
         public Game1()
@@ -77,11 +77,20 @@ namespace Connect_four
             closeButton = new Button(closeButtonTex, new Rectangle(720, 20, 50, 50));
             helpButton = new Button(questionIcon, new Rectangle(660, 20, 50, 50));
             board = new Board(gameBoard, gamePiece);
-            pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight, new Rectangle(10, 10, 50,50), pacCloseMouth);
+            pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight, new Rectangle(5, 5, 50,50));
             barriers.Add(new Barrier(barrierTex, new Rectangle(0, 0, 5, 700)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(795, 0, 5, 700)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(0, 0, 800, 5)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(0, 695, 800, 5)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(60, 60, 300, 20)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(60, 60, 20, 255)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(60, 380, 20, 255)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(60, 615, 300, 20)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(430, 60, 300, 20)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(430, 615, 300, 20)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(720, 380, 20, 255)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(720, 60, 20, 255)));
+
         }
 
         protected override void LoadContent()
@@ -96,11 +105,11 @@ namespace Connect_four
             smallFont = Content.Load<SpriteFont>("Small Font");
             closeButtonTex = Content.Load<Texture2D>("close_box_red");
 
-            pacDown = Content.Load<Texture2D>("pac_down");
-            pacUp = Content.Load<Texture2D>("pac_up");
-            pacLeft = Content.Load<Texture2D>("pac_left");
-            pacRight = Content.Load<Texture2D>("pac_right");
-            pacCloseMouth = Content.Load<Texture2D>("pacMouthClose");
+            pacDown = Content.Load<Texture2D>("HelmetDown");
+            pacUp = Content.Load<Texture2D>("HelmetUp");
+            pacLeft = Content.Load<Texture2D>("HelmetLeft");
+            pacRight = Content.Load<Texture2D>("HelmetRight");
+            roadBackground = Content.Load<Texture2D>("road (2)");
             barrierTex = Content.Load<Texture2D>("rock_barrier");
             coinTex = Content.Load<Texture2D>("coin");
         }
@@ -130,14 +139,15 @@ namespace Connect_four
                 }
             }
             else if (screen == Screen.Pacman){
-                if (seconds >= 0.5){
+                /*if (seconds >= 0.5){
                     startTime = (float)gameTime.TotalGameTime.TotalSeconds;
                     pacman.Mouth();
-                }
-                pacman.Move(keyboardState);
-                foreach(Barrier b in barriers)
+                }*/
+                pacman.Update(keyboardState);
+                pacman.Move();
+                foreach (Barrier b in barriers)
                 {
-                    pacman.Intersects(b.location(), keyboardState);
+                    pacman.Intersects(b.location());
                 }
             }
             else if(screen == Screen.Connect4){
@@ -178,8 +188,6 @@ namespace Connect_four
                         screen = Screen.Connect4;
                 }
             }
-            
-            
             base.Update(gameTime);
         }
 
@@ -195,6 +203,7 @@ namespace Connect_four
             }
             else if(screen == Screen.Pacman){
                 GraphicsDevice.Clear(Color.SteelBlue);
+                //_spriteBatch.Draw(roadBackground, new Rectangle(0, 0, 800, 700), Color.White);
                 pacman.Draw(_spriteBatch);
                 foreach (Barrier b in barriers){
                     b.Draw(_spriteBatch);

@@ -21,13 +21,9 @@ namespace Connect_four
         {
             return _location;
         }
-        public bool Intersects(Rectangle r)
-        {
-            return _location.Intersects(r);
-        }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, _location, Color.White);
+            spriteBatch.Draw(_texture, _location, Color.DarkBlue);
         }
     }
 }
