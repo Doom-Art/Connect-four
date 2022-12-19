@@ -13,6 +13,7 @@ namespace Connect_four
         //General Variables:
         MouseState mouseState;
         MouseState prevMouseState;
+        KeyboardState keyboardState;
         float seconds;
         float startTime;
         SpriteFont font;
@@ -45,12 +46,15 @@ namespace Connect_four
         Button helpButton;
 
         //Pacman variables:
+        List<Barrier> barriers;
+        Pacman pacman;
         Texture2D pacUp;
         Texture2D pacDown;
         Texture2D pacLeft;
         Texture2D pacRight;
-        Texture2D barrier;
-        Texture2D coin;
+        Texture2D barrierTex;
+        Texture2D coinTex;
+        Texture2D pacCloseMouth;
         
 
         public Game1()
@@ -65,6 +69,7 @@ namespace Connect_four
             screen = Screen.Menu;
             pacPlayRect = new Rectangle(150, 290, 200, 200);
             c4Rect = new Rectangle(450, 290, 200, 200);
+            barriers = new List<Barrier>();
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
             _graphics.ApplyChanges();
@@ -72,6 +77,11 @@ namespace Connect_four
             closeButton = new Button(closeButtonTex, new Rectangle(720, 20, 50, 50));
             helpButton = new Button(questionIcon, new Rectangle(660, 20, 50, 50));
             board = new Board(gameBoard, gamePiece);
+            pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight, new Rectangle(10, 10, 50,50), pacCloseMouth);
+            barriers.Add(new Barrier(barrierTex, new Rectangle(0, 0, 5, 700)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(795, 0, 5, 700)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(0, 0, 800, 5)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(0, 695, 800, 5)));
         }
 
         protected override void LoadContent()
@@ -90,13 +100,15 @@ namespace Connect_four
             pacUp = Content.Load<Texture2D>("pac_up");
             pacLeft = Content.Load<Texture2D>("pac_left");
             pacRight = Content.Load<Texture2D>("pac_right");
-            barrier = Content.Load<Texture2D>("rock_barrier");
-            coin = Content.Load<Texture2D>("coin");
+            pacCloseMouth = Content.Load<Texture2D>("pacMouthClose");
+            barrierTex = Content.Load<Texture2D>("rock_barrier");
+            coinTex = Content.Load<Texture2D>("coin");
         }
 
         protected override void Update(GameTime gameTime)
         {
             seconds = (float)gameTime.TotalGameTime.TotalSeconds - startTime;
+            keyboardState = Keyboard.GetState();
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
             this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
@@ -117,6 +129,17 @@ namespace Connect_four
                     }
                 }
             }
+            else if (screen == Screen.Pacman){
+                if (seconds >= 0.5){
+                    startTime = (float)gameTime.TotalGameTime.TotalSeconds;
+                    pacman.Mouth();
+                }
+                pacman.Move(keyboardState);
+                foreach(Barrier b in barriers)
+                {
+                    pacman.Intersects(b.location(), keyboardState);
+                }
+            }
             else if(screen == Screen.Connect4){
                 if (mouseState.Y < 100)
                     IsMouseVisible = true;
@@ -131,13 +154,10 @@ namespace Connect_four
                     }
                     else if (!gameWon){
                         if (board.PlayerTurn(mouseState, playerTurn)){
-                            /*if (playerTurn == 1)
+                            if (playerTurn == 1)
                                  playerTurn = 2;
                             else if (playerTurn == 2)
-                                playerTurn = 1;*/
-                            bool temp = false;
-                            while (!temp)
-                                temp = board.PlayerTurnAI(2);
+                                playerTurn = 1;
                         }
                         winner = board.CheckForFour();
                         if (winner != 0){
@@ -172,6 +192,13 @@ namespace Connect_four
                 _spriteBatch.DrawString(font, "Arcade", new Vector2(280, 90), Color.Black);
                 _spriteBatch.Draw(pacPlay, pacPlayRect, Color.White);
                 _spriteBatch.Draw(connect4Play, c4Rect, Color.White);
+            }
+            else if(screen == Screen.Pacman){
+                GraphicsDevice.Clear(Color.SteelBlue);
+                pacman.Draw(_spriteBatch);
+                foreach (Barrier b in barriers){
+                    b.Draw(_spriteBatch);
+                }
             }
             else if (screen == Screen.Connect4){
                 GraphicsDevice.Clear(Color.White);
