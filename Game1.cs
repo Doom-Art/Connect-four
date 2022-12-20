@@ -56,7 +56,8 @@ namespace Connect_four
         Texture2D pacRight;
         Texture2D barrierTex;
         Texture2D coinTex;
-        Texture2D roadBackground;
+        Texture2D ghostLeft;
+        Texture2D ghostRight;
         
 
         public Game1()
@@ -68,6 +69,7 @@ namespace Connect_four
 
         protected override void Initialize()
         {
+            this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
             pacPlayRect = new Rectangle(150, 290, 200, 200);
             c4Rect = new Rectangle(450, 290, 200, 200);
@@ -82,6 +84,7 @@ namespace Connect_four
             board = new Board(gameBoard, gamePiece);
             pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight, new Rectangle(5, 5, 50,50));
             Barrier.PositionSet(barriers, barrierTex);
+            ghost = new Ghost(ghostLeft, ghostRight, new Rectangle(200, 200, 50, 50));
         }
 
         protected override void LoadContent()
@@ -100,9 +103,10 @@ namespace Connect_four
             pacUp = Content.Load<Texture2D>("HelmetUp");
             pacLeft = Content.Load<Texture2D>("HelmetLeft");
             pacRight = Content.Load<Texture2D>("HelmetRight");
-            roadBackground = Content.Load<Texture2D>("road (2)");
             barrierTex = Content.Load<Texture2D>("rock_barrier");
             coinTex = Content.Load<Texture2D>("coin");
+            ghostLeft = Content.Load<Texture2D>("GhostLeft");
+            ghostRight = Content.Load<Texture2D>("GhostRight");
         }
 
         protected override void Update(GameTime gameTime)
@@ -111,7 +115,7 @@ namespace Connect_four
             keyboardState = Keyboard.GetState();
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
-            this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
+            //this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (screen == Screen.Menu){
@@ -123,13 +127,16 @@ namespace Connect_four
                         gameWon = false;
                         IsMouseVisible = false;
                         board.Reset();
+                        this.Window.Title = "Connect 4";
                     }
                     if (pacPlayRect.Contains(mouseState.X, mouseState.Y)){
+                        this.Window.Title = "Pacman";
                         gameWon = false;
+                        pacman.Reset();
                         screen = Screen.Pacman;
-                        for (int i = 5; i < 700; i += 50)
+                        for (int i = 5; i < 700; i += 47)
                         {
-                            for (int j = 9; j < 800; j += 50)
+                            for (int j = 10; j < 800; j += 50)
                             {
                                 Rectangle temp = new Rectangle(j, i, 30, 30);
                                 bool temp2 = true;
@@ -168,6 +175,7 @@ namespace Connect_four
                     if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                         if (closeButton.Clicked(mouseState))
                             screen = Screen.Menu;
+                        this.Window.Title = "Mini Arcade Menu";
                     }
                 }
             }
@@ -179,18 +187,19 @@ namespace Connect_four
                 if(mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                     if (closeButton.Clicked(mouseState)) {
                         screen = Screen.Menu;
+                        this.Window.Title = "Mini Arcade Menu";
                     }
                     else if (helpButton.Clicked(mouseState)){
                         screen = Screen.Connect4Help;
+                        this.Window.Title = "Connect 4 Rules/Instructions";
                     }
                     else if (!gameWon){
                         if (board.PlayerTurn(mouseState, playerTurn)){
-                            /*if (playerTurn == 1)
+                            if (playerTurn == 1)
                                  playerTurn = 2;
                             else if (playerTurn == 2)
-                                playerTurn = 1;*/
+                                playerTurn = 1;
                         }
-                        board.PlayerTurnAI(2);
                         winner = board.CheckForFour();
                         if (winner != 0){
                             this.Window.Title = $"Player {winner} wins";
@@ -208,6 +217,7 @@ namespace Connect_four
                 if(mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                     if (closeButton.Clicked(mouseState))
                         screen = Screen.Connect4;
+                    this.Window.Title = "Connect 4";
                 }
             }
             base.Update(gameTime);

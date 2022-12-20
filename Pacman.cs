@@ -91,5 +91,11 @@ namespace Connect_four
         { 
             spriteBatch.Draw(_pacCurrentTex, _location, Color.White);
         }
+        public void Reset()
+        {
+            _speed = new Vector2(0, 0);
+            _pacCurrentTex = _pacRight;
+            _location = new Rectangle(5, 5, 45, 45);
+        }
     }
 }
