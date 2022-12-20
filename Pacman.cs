@@ -63,8 +63,9 @@ namespace Connect_four
         public void Intersects(Rectangle barrier)
         {
             if (_speed == _left){
-                if (_location.Intersects(barrier))
+                if (_location.Intersects(barrier)){
                     _location.X = barrier.Right;
+                }
             }
             else if (_speed == _right){
                 if (_location.Intersects(barrier)){
@@ -81,6 +82,10 @@ namespace Connect_four
                     _location.Y = barrier.Top - _location.Height;
                 }
             }
+        }
+        public bool IntersectCoin(Rectangle rect)
+        {
+            return _location.Intersects(rect);
         }
         public void Draw(SpriteBatch spriteBatch)
         { 

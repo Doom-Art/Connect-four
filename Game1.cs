@@ -47,6 +47,8 @@ namespace Connect_four
 
         //Pacman variables:
         List<Barrier> barriers;
+        List<Coin> coins;
+        Ghost ghost;
         Pacman pacman;
         Texture2D pacUp;
         Texture2D pacDown;
@@ -70,6 +72,7 @@ namespace Connect_four
             pacPlayRect = new Rectangle(150, 290, 200, 200);
             c4Rect = new Rectangle(450, 290, 200, 200);
             barriers = new List<Barrier>();
+            coins = new List<Coin>();
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
             _graphics.ApplyChanges();
@@ -78,19 +81,7 @@ namespace Connect_four
             helpButton = new Button(questionIcon, new Rectangle(660, 20, 50, 50));
             board = new Board(gameBoard, gamePiece);
             pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight, new Rectangle(5, 5, 50,50));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(0, 0, 5, 700)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(795, 0, 5, 700)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(0, 0, 800, 5)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(0, 695, 800, 5)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(60, 60, 300, 20)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(60, 60, 20, 255)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(60, 380, 20, 255)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(60, 615, 300, 20)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(430, 60, 300, 20)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(430, 615, 300, 20)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(720, 380, 20, 255)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(720, 60, 20, 255)));
-
+            Barrier.PositionSet(barriers, barrierTex);
         }
 
         protected override void LoadContent()
@@ -134,20 +125,50 @@ namespace Connect_four
                         board.Reset();
                     }
                     if (pacPlayRect.Contains(mouseState.X, mouseState.Y)){
+                        gameWon = false;
                         screen = Screen.Pacman;
+                        for (int i = 5; i < 700; i += 50)
+                        {
+                            for (int j = 9; j < 800; j += 50)
+                            {
+                                Rectangle temp = new Rectangle(j, i, 30, 30);
+                                bool temp2 = true;
+                                foreach (Barrier b in barriers)
+                                    if (b.DoesIntersect(temp))
+                                        temp2 = false;
+                                if (temp2){
+                                    coins.Add(new Coin(coinTex, temp));
+                                }
+                            }
+                        }
                     }
                 }
             }
             else if (screen == Screen.Pacman){
-                /*if (seconds >= 0.5){
-                    startTime = (float)gameTime.TotalGameTime.TotalSeconds;
-                    pacman.Mouth();
-                }*/
-                pacman.Update(keyboardState);
-                pacman.Move();
-                foreach (Barrier b in barriers)
-                {
-                    pacman.Intersects(b.location());
+                if (!gameWon){
+                    pacman.Update(keyboardState);
+                    pacman.Move();
+                    foreach (Barrier b in barriers)
+                    {
+                        pacman.Intersects(b.location());
+                    }
+                    for (int i = 0; i < coins.Count; i++)
+                    {
+                        if (pacman.IntersectCoin(coins[i].Location())){
+                            coins.RemoveAt(i);
+                            i--;
+                        }
+                    }
+                    if (coins.Count == 0){
+                        gameWon = true;
+                        
+                    }
+                }
+                else{
+                    if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
+                        if (closeButton.Clicked(mouseState))
+                            screen = Screen.Menu;
+                    }
                 }
             }
             else if(screen == Screen.Connect4){
@@ -164,11 +185,12 @@ namespace Connect_four
                     }
                     else if (!gameWon){
                         if (board.PlayerTurn(mouseState, playerTurn)){
-                            if (playerTurn == 1)
+                            /*if (playerTurn == 1)
                                  playerTurn = 2;
                             else if (playerTurn == 2)
-                                playerTurn = 1;
+                                playerTurn = 1;*/
                         }
+                        board.PlayerTurnAI(2);
                         winner = board.CheckForFour();
                         if (winner != 0){
                             this.Window.Title = $"Player {winner} wins";
@@ -207,6 +229,13 @@ namespace Connect_four
                 pacman.Draw(_spriteBatch);
                 foreach (Barrier b in barriers){
                     b.Draw(_spriteBatch);
+                }
+                foreach(Coin c in coins){
+                    c.Draw(_spriteBatch);
+                }
+                if (gameWon){
+                    _spriteBatch.DrawString(font, "You Won", new Vector2(200, 300), Color.Black);
+                    closeButton.Draw(_spriteBatch);
                 }
             }
             else if (screen == Screen.Connect4){
