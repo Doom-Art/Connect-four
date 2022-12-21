@@ -28,7 +28,7 @@ namespace Connect_four
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, _location, Color.Bisque);
+            spriteBatch.Draw(_texture, _location, Color.DarkTurquoise);
         }
         public static void PositionSet(List<Barrier> barriers, Texture2D barrierTex)
         {
@@ -48,6 +48,10 @@ namespace Connect_four
             barriers.Add(new Barrier(barrierTex, new Rectangle(140, 140, 600, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 535, 480, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 460, 480, width)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(145, 260, width, 200)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(210, 240, width, 160)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(210, 400, 300, width)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(210, 240, 300, width)));
         }
     }
 }

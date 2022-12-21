@@ -60,7 +60,11 @@ namespace Connect_four
                 _pacCurrentTex = _pacDown;
             }
         }
-        public void Intersects(Rectangle barrier)
+        /// <summary>
+        /// Checks for barrier collisions 
+        /// </summary>
+        /// <param name="barrier"></param>
+        public void IntersectsBarrier(Rectangle barrier)
         {
             if (_speed == _left){
                 if (_location.Intersects(barrier)){
@@ -83,7 +87,7 @@ namespace Connect_four
                 }
             }
         }
-        public bool IntersectCoin(Rectangle rect)
+        public bool Intersect(Rectangle rect)
         {
             return _location.Intersects(rect);
         }
