@@ -244,12 +244,10 @@ namespace Connect_four
                 GraphicsDevice.Clear(Color.Violet);
                 //_spriteBatch.Draw(roadBackground, new Rectangle(0, 0, 800, 700), Color.White);
                 pacman.Draw(_spriteBatch);
-                foreach (Barrier b in barriers){
+                foreach (Barrier b in barriers)
                     b.Draw(_spriteBatch);
-                }
-                foreach(Coin c in coins){
+                foreach(Coin c in coins)
                     c.Draw(_spriteBatch);
-                }
                 ghost.Draw(_spriteBatch);
                 if (gameWon){
                     if (winner == 1)
