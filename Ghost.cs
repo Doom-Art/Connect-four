@@ -88,7 +88,10 @@ namespace Connect_four
         }
         public void Draw(SpriteBatch spriteBatch, bool test)
         {
-            spriteBatch.Draw(_currentTex, _location, Color.Blue);
+            if(test)
+                spriteBatch.Draw(_currentTex, _location, Color.Black);
+            else
+                spriteBatch.Draw(_currentTex, _location, Color.Blue);
         }
     }
 }

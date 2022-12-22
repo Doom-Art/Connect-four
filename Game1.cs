@@ -55,6 +55,7 @@ namespace Connect_four
         List<Ghost> ghosts;
         List<PowerUpBerry> berries;
         bool powerUp;
+        bool temp;
         Pacman pacman;
         Texture2D pacUp;
         Texture2D pacDown;
@@ -78,6 +79,7 @@ namespace Connect_four
             berries = new List<PowerUpBerry>();
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
+            temp = true;
             pacPlayRect = new Rectangle(150, 290, 200, 200);
             c4Rect = new Rectangle(450, 290, 200, 200);
             barriers = new List<Barrier>();
@@ -156,7 +158,7 @@ namespace Connect_four
                 }
             }
             else if (screen == Screen.PacmanInstructions){
-                if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
+                if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released) || keyboardState.IsKeyDown(Keys.Enter)){
                     screen = Screen.Pacman;
                 }
                 if (keyboardState.IsKeyDown(Keys.D1))
@@ -172,8 +174,18 @@ namespace Connect_four
                 if (!gameWon){
                     pacman.Update(keyboardState);
                     pacman.Move();
-                    foreach (Ghost ghost in ghosts)
-                        ghost.Move();
+                    if (!powerUp)
+                        foreach (Ghost ghost in ghosts)
+                            ghost.Move();
+                    else{
+                        if (temp){
+                            foreach (Ghost ghost in ghosts)
+                                ghost.Move();
+                            temp = false;
+                        }
+                        else
+                            temp = true;
+                    }
                     foreach (Barrier b in barriers)
                     {
                         pacman.IntersectsBarrier(b.location());
@@ -224,8 +236,8 @@ namespace Connect_four
                     }
                 }
                 else{
-                    if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
-                        if (closeButton.Clicked(mouseState))
+                    if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released) || keyboardState.IsKeyDown(Keys.C)){
+                        if (closeButton.Clicked(mouseState) || keyboardState.IsKeyDown(Keys.C))
                             screen = Screen.Menu;
                         this.Window.Title = "Mini Arcade Menu";
                     }
@@ -300,7 +312,7 @@ namespace Connect_four
             else if (screen == Screen.PacmanInstructions){
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Instructions", new Vector2(230, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click to start the game\nAfter the game ends press R to restart\nGrab a power berry to get ghost eating powers for 5 seconds\nChoose the difficulty:\n1 for Hell\n2 for Normal\n3 for Hacker Mode\n4 for Random Speeds (default)", new Vector2(10, 120), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click or press Enter to start the game\nAfter the game ends press R to restart or C to close\nGrab a power berry to get ghost eating powers for 5 seconds\nChoose the difficulty:\n1 for Hell\n2 for Normal (default) \n3 for Hacker Mode\n4 for Random Speeds", new Vector2(10, 120), Color.Black);
             }
             else if(screen == Screen.Pacman){
                 GraphicsDevice.Clear(Color.Violet);
@@ -315,8 +327,15 @@ namespace Connect_four
                 {
                     if (!powerUp)
                         ghost.Draw(_spriteBatch);
-                    else
-                        ghost.Draw(_spriteBatch, false);
+                    else{
+                        if (seconds < 4)
+                            ghost.Draw(_spriteBatch, false);
+                        else if (seconds <= 4.5)
+                            ghost.Draw(_spriteBatch, true);
+                        else
+                            ghost.Draw(_spriteBatch, false);
+                    }
+
                 }
                 if (gameWon){
                     if (winner == 1)

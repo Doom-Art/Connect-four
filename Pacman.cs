@@ -31,10 +31,11 @@ namespace Connect_four
             _location = location;
             _speed = new Vector2(0,0);
             _pacCurrentTex = _pacRight;
-            _left = new Vector2(-(Ghost.rand.Next(1, 4)), 0);
-            _right = new Vector2((Ghost.rand.Next(1, 4)), 0);
-            _up = new Vector2(0, -(Ghost.rand.Next(1,4)));
-            _down = new Vector2(0, (Ghost.rand.Next(1, 4)));
+            int speed = 2;
+            _left = new Vector2(-speed, 0);
+            _right = new Vector2((speed), 0);
+            _up = new Vector2(0, -(speed));
+            _down = new Vector2(0, (speed));
         }
         public void Move()
         {
