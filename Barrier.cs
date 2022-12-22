@@ -40,12 +40,12 @@ namespace Connect_four
             barriers.Add(new Barrier(barrierTex, new Rectangle(60, 60, 300, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(60, 60, width, 255)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(60, 380, width, 255)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(60, 615, 300, width)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(140, 615, 220, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(430, 60, 220, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(430, 615, 300, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(720, 380, width, 255)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(720, 60, width, 255)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(140, 140, 600, width)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(140, 140, 580, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 535, 480, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 460, 480, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 260, width, 200)));
@@ -53,6 +53,7 @@ namespace Connect_four
             barriers.Add(new Barrier(barrierTex, new Rectangle(210, 400, 300, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(210, 240, 450, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 535, width, 80)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(350, 616, width, 80)));
             //barriers.Add(new Barrier(barrierTex, new Rectangle(709, 530, 30, width)));
         }
     }

@@ -31,15 +31,30 @@ namespace Connect_four
             _location = location;
             _speed = new Vector2(0,0);
             _pacCurrentTex = _pacRight;
-            _left = new Vector2(-2, 0);
-            _right = new Vector2(2, 0);
-            _up = new Vector2(0, -2);
-            _down = new Vector2(0, 2);
+            _left = new Vector2(-(Ghost.rand.Next(1, 4)), 0);
+            _right = new Vector2((Ghost.rand.Next(1, 4)), 0);
+            _up = new Vector2(0, -(Ghost.rand.Next(1,4)));
+            _down = new Vector2(0, (Ghost.rand.Next(1, 4)));
         }
         public void Move()
         {
             _location.X += (int)_speed.X;
             _location.Y += (int)_speed.Y;
+        }
+        public void SpeedSet(int speed)
+        {
+            if (speed < 4){
+                _left = new Vector2(-speed, 0);
+                _right = new Vector2((speed), 0);
+                _up = new Vector2(0, -(speed));
+                _down = new Vector2(0, (speed));
+            }
+            else{
+                _left = new Vector2(-(Ghost.rand.Next(1, 4)), 0);
+                _right = new Vector2((Ghost.rand.Next(1, 4)), 0);
+                _up = new Vector2(0, -(Ghost.rand.Next(1, 4)));
+                _down = new Vector2(0, (Ghost.rand.Next(1, 4)));
+            }
         }
         public void Update(KeyboardState keyboardState)
         {

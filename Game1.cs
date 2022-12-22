@@ -124,7 +124,7 @@ namespace Connect_four
             keyboardState = Keyboard.GetState();
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
-            //this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
+            this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (screen == Screen.Menu){
@@ -154,7 +154,14 @@ namespace Connect_four
                 if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                     screen = Screen.Pacman;
                 }
-                
+                if (keyboardState.IsKeyDown(Keys.D1))
+                    pacman.SpeedSet(1);
+                else if (keyboardState.IsKeyDown(Keys.D2))
+                    pacman.SpeedSet(2);
+                else if (keyboardState.IsKeyDown(Keys.D3))
+                    pacman.SpeedSet(3);
+                else if (keyboardState.IsKeyDown(Keys.D4))
+                    pacman.SpeedSet(4);
             }
             else if (screen == Screen.Pacman){
                 if (!gameWon){
@@ -190,6 +197,17 @@ namespace Connect_four
                         if (closeButton.Clicked(mouseState))
                             screen = Screen.Menu;
                         this.Window.Title = "Mini Arcade Menu";
+                    }
+                    else if (keyboardState.IsKeyDown(Keys.R)){
+                        gameWon = false;
+                        pacman.Reset();
+                        ghosts.Clear();
+                        Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
+                        Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
+                        Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
+                        screen = Screen.Pacman;
+                        winner = 0;
+                        Coin.SetCoins(coins, coinTex, barriers);
                     }
                 }
             }
@@ -251,7 +269,7 @@ namespace Connect_four
             else if (screen == Screen.PacmanInstructions){
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Instructions", new Vector2(230, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click to start the game", new Vector2(10, 120), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click to start the game\nAfter the game ends press R to restart\nChoose the difficulty:\n1 for Hell\n2 for Normal\n3 for Hacker Mode\n4 for Random Speeds", new Vector2(10, 120), Color.Black);
             }
             else if(screen == Screen.Pacman){
                 GraphicsDevice.Clear(Color.Violet);

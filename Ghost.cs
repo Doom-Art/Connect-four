@@ -16,22 +16,34 @@ namespace Connect_four
         private Texture2D _rightTexture;
         private Rectangle _location;
         private Vector2 _speed;
+        private Color _colorMask;
         public static Random rand = new Random();
+
+        public Ghost(Texture2D leftTexture, Texture2D rightTexture, Rectangle rectangle, Color colorMask)
+        {
+            _leftTexture = leftTexture;
+            _rightTexture = rightTexture;
+            _currentTex = leftTexture;
+            _location = rectangle;
+            _speed = new Vector2(-2, 0);
+            _colorMask = colorMask;
+        }
         public Ghost(Texture2D leftTexture, Texture2D rightTexture, Rectangle rectangle)
         {
             _leftTexture = leftTexture;
             _rightTexture = rightTexture;
             _currentTex = leftTexture;
             _location = rectangle;
-            _speed = new Vector2(-2,0);
+            _speed = new Vector2(-2, 0);
+            _colorMask = Color.White;
         }
         public static void GenerateGhosts(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight)
         {
             list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45)));
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(85, 547, 45, 45)));
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(157, 388, 45, 45)));
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45)));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45), Color.Green));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(85, 547, 45, 45), Color.Purple));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(157, 388, 45, 45), Color.Red));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45), Color.Turquoise));
         }
         public void Reset()
         {
@@ -72,7 +84,7 @@ namespace Connect_four
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_currentTex, _location, Color.Green);
+            spriteBatch.Draw(_currentTex, _location, _colorMask);
         }
         public void Draw(SpriteBatch spriteBatch, bool test)
         {
