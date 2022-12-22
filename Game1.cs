@@ -53,6 +53,8 @@ namespace Connect_four
         List<Barrier> barriers;
         List<Coin> coins;
         List<Ghost> ghosts;
+        List<PowerUpBerry> berries;
+        bool powerUp;
         Pacman pacman;
         Texture2D pacUp;
         Texture2D pacDown;
@@ -73,6 +75,7 @@ namespace Connect_four
 
         protected override void Initialize()
         {
+            berries = new List<PowerUpBerry>();
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
             pacPlayRect = new Rectangle(150, 290, 200, 200);
@@ -124,7 +127,7 @@ namespace Connect_four
             keyboardState = Keyboard.GetState();
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
-            this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
+            //this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (screen == Screen.Menu){
@@ -140,6 +143,8 @@ namespace Connect_four
                     }
                     if (pacPlayRect.Contains(mouseState.X, mouseState.Y)){
                         this.Window.Title = "Pacman";
+                        berries.Clear();
+                        berries.Add(new PowerUpBerry(coinTex, new Rectangle(755, 5, 40, 40), coins));
                         gameWon = false;
                         pacman.Reset();
                         ghosts.Clear();
@@ -182,15 +187,41 @@ namespace Connect_four
                             i--;
                         }
                     }
+                    for (int i=0; i<berries.Count; i++){
+                        if (powerUp = berries[i].GetPowerUp(pacman.Location())){
+                            powerUp = true;
+                            berries.RemoveAt(i);
+                            i--;
+                            startTime = (float)gameTime.TotalGameTime.TotalSeconds;
+                            seconds = (float)gameTime.TotalGameTime.TotalSeconds - startTime;
+                        }
+                    }
+                    if (powerUp){
+                        this.Window.Title = $"Pacman || {(5.1 - seconds).ToString("00:0")} Seconds Left";
+                        if (seconds > 5){
+                            powerUp = false;
+                            this.Window.Title = "Pacman";
+
+                        }
+                    }
+                    
                     if (coins.Count == 0){
                         gameWon = true; winner = 1;
                     }
-                    foreach (Ghost ghost in ghosts)
-                        if (pacman.Intersect(ghost.Location())){
-                            gameWon = true; 
-                            winner = -1;
-                            gameOverInstance.Play();
+                    for(int i = 0; i<ghosts.Count; i++)
+                    {
+                        if (pacman.Intersect(ghosts[i].Location())){
+                            if (!powerUp){
+                                gameWon = true;
+                                winner = -1;
+                                gameOverInstance.Play();
+                            }
+                            else{
+                                ghosts.RemoveAt(i);
+                                i--;
+                            }
                         }
+                    }
                 }
                 else{
                     if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
@@ -201,9 +232,9 @@ namespace Connect_four
                     else if (keyboardState.IsKeyDown(Keys.R)){
                         gameWon = false;
                         pacman.Reset();
+                        berries.Clear();
+                        berries.Add(new PowerUpBerry(coinTex, new Rectangle(755, 5, 40, 40), coins));
                         ghosts.Clear();
-                        Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
-                        Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
                         Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
                         screen = Screen.Pacman;
                         winner = 0;
@@ -269,7 +300,7 @@ namespace Connect_four
             else if (screen == Screen.PacmanInstructions){
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Instructions", new Vector2(230, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click to start the game\nAfter the game ends press R to restart\nChoose the difficulty:\n1 for Hell\n2 for Normal\n3 for Hacker Mode\n4 for Random Speeds", new Vector2(10, 120), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click to start the game\nAfter the game ends press R to restart\nGrab a power berry to get ghost eating powers for 5 seconds\nChoose the difficulty:\n1 for Hell\n2 for Normal\n3 for Hacker Mode\n4 for Random Speeds (default)", new Vector2(10, 120), Color.Black);
             }
             else if(screen == Screen.Pacman){
                 GraphicsDevice.Clear(Color.Violet);
@@ -278,8 +309,15 @@ namespace Connect_four
                     b.Draw(_spriteBatch);
                 foreach(Coin c in coins)
                     c.Draw(_spriteBatch);
+                foreach (PowerUpBerry berry in berries)
+                    berry.Draw(_spriteBatch);
                 foreach (Ghost ghost in ghosts)
-                    ghost.Draw(_spriteBatch);
+                {
+                    if (!powerUp)
+                        ghost.Draw(_spriteBatch);
+                    else
+                        ghost.Draw(_spriteBatch, false);
+                }
                 if (gameWon){
                     if (winner == 1)
                         _spriteBatch.DrawString(font, "You Won", new Vector2(200, 300), Color.Black);

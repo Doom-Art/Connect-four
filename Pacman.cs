@@ -106,6 +106,10 @@ namespace Connect_four
         {
             return _location.Intersects(rect);
         }
+        public Rectangle Location()
+        {
+            return _location;
+        }
         public void Draw(SpriteBatch spriteBatch)
         { 
             spriteBatch.Draw(_pacCurrentTex, _location, Color.White);
