@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -18,12 +19,15 @@ namespace Connect_four
         float startTime;
         SpriteFont font;
         SpriteFont smallFont;
+        SoundEffect gameOver;
+        SoundEffectInstance gameOverInstance;
         enum Screen
         {
             Menu,
             Connect4,
             Connect4Help,
-            Pacman
+            Pacman,
+            PacmanInstructions
         }
         Screen screen;
 
@@ -48,7 +52,7 @@ namespace Connect_four
         //Pacman variables:
         List<Barrier> barriers;
         List<Coin> coins;
-        Ghost ghost;
+        List<Ghost> ghosts;
         Pacman pacman;
         Texture2D pacUp;
         Texture2D pacDown;
@@ -74,6 +78,7 @@ namespace Connect_four
             pacPlayRect = new Rectangle(150, 290, 200, 200);
             c4Rect = new Rectangle(450, 290, 200, 200);
             barriers = new List<Barrier>();
+            ghosts = new List<Ghost>();
             coins = new List<Coin>();
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
@@ -84,19 +89,23 @@ namespace Connect_four
             board = new Board(gameBoard, gamePiece);
             pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight, new Rectangle(5, 5, 50,50));
             Barrier.PositionSet(barriers, barrierTex);
-            ghost = new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45));
+            Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            font = Content.Load<SpriteFont>("MilkyHoney");
+            smallFont = Content.Load<SpriteFont>("Small Font");
+            gameOver = Content.Load<SoundEffect>("game_over");
+            gameOverInstance = gameOver.CreateInstance();
+
             questionIcon = Content.Load<Texture2D>("questionIcon");
             gameBoard = Content.Load<Texture2D>("Connect4Board");
             pacPlay = Content.Load<Texture2D>("pacPlay");
             connect4Play = Content.Load<Texture2D>("Connect4Play");
             gamePiece = Content.Load<Texture2D>("circle");
-            font = Content.Load<SpriteFont>("MilkyHoney");
-            smallFont = Content.Load<SpriteFont>("Small Font");
             closeButtonTex = Content.Load<Texture2D>("close_box_red");
 
             pacDown = Content.Load<Texture2D>("HelmetDown");
@@ -133,35 +142,31 @@ namespace Connect_four
                         this.Window.Title = "Pacman";
                         gameWon = false;
                         pacman.Reset();
-                        ghost.Reset();
-                        screen = Screen.Pacman;
+                        ghosts.Clear();
+                        Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
+                        screen = Screen.PacmanInstructions;
                         winner = 0;
-                        for (int i = 5; i < 700; i += 47)
-                        {
-                            for (int j = 10; j < 800; j += 50)
-                            {
-                                Rectangle temp = new Rectangle(j, i, 30, 30);
-                                bool temp2 = true;
-                                foreach (Barrier b in barriers)
-                                    if (b.DoesIntersect(temp))
-                                        temp2 = false;
-                                if (temp2){
-                                    coins.Add(new Coin(coinTex, temp));
-                                }
-                            }
-                        }
+                        Coin.SetCoins(coins, coinTex, barriers);
                     }
                 }
+            }
+            else if (screen == Screen.PacmanInstructions){
+                if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
+                    screen = Screen.Pacman;
+                }
+                
             }
             else if (screen == Screen.Pacman){
                 if (!gameWon){
                     pacman.Update(keyboardState);
                     pacman.Move();
-                    ghost.Move();
+                    foreach (Ghost ghost in ghosts)
+                        ghost.Move();
                     foreach (Barrier b in barriers)
                     {
                         pacman.IntersectsBarrier(b.location());
-                        ghost.Crash(b.location());
+                        foreach (Ghost ghost in ghosts)
+                            ghost.Crash(b.location());
                     }
                     for (int i = 0; i < coins.Count; i++)
                     {
@@ -172,11 +177,13 @@ namespace Connect_four
                     }
                     if (coins.Count == 0){
                         gameWon = true; winner = 1;
-                        
                     }
-                    else if (pacman.Intersect(ghost.Location())){
-                        gameWon = true; winner = -1;
-                    }
+                    foreach (Ghost ghost in ghosts)
+                        if (pacman.Intersect(ghost.Location())){
+                            gameWon = true; 
+                            winner = -1;
+                            gameOverInstance.Play();
+                        }
                 }
                 else{
                     if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
@@ -216,6 +223,7 @@ namespace Connect_four
                         if (board.CheckStalemate()){
                             gameWon = true;
                             winner = -1;
+                            gameOverInstance.Play();
                         }
                     }
                 }
@@ -240,20 +248,25 @@ namespace Connect_four
                 _spriteBatch.Draw(pacPlay, pacPlayRect, Color.White);
                 _spriteBatch.Draw(connect4Play, c4Rect, Color.White);
             }
+            else if (screen == Screen.PacmanInstructions){
+                GraphicsDevice.Clear(Color.White);
+                _spriteBatch.DrawString(font, "Instructions", new Vector2(230, 20), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click to start the game", new Vector2(10, 120), Color.Black);
+            }
             else if(screen == Screen.Pacman){
                 GraphicsDevice.Clear(Color.Violet);
-                //_spriteBatch.Draw(roadBackground, new Rectangle(0, 0, 800, 700), Color.White);
                 pacman.Draw(_spriteBatch);
                 foreach (Barrier b in barriers)
                     b.Draw(_spriteBatch);
                 foreach(Coin c in coins)
                     c.Draw(_spriteBatch);
-                ghost.Draw(_spriteBatch);
+                foreach (Ghost ghost in ghosts)
+                    ghost.Draw(_spriteBatch);
                 if (gameWon){
                     if (winner == 1)
                         _spriteBatch.DrawString(font, "You Won", new Vector2(200, 300), Color.Black);
                     else
-                        _spriteBatch.DrawString(font, "You Lose", new Vector2(200, 300), Color.Black);
+                        _spriteBatch.DrawString(font, "You Lose", new Vector2(200, 300), Color.White);
                     closeButton.Draw(_spriteBatch);
                 }
             }

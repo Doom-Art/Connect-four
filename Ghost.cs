@@ -25,6 +25,14 @@ namespace Connect_four
             _location = rectangle;
             _speed = new Vector2(-2,0);
         }
+        public static void GenerateGhosts(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight)
+        {
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45)));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(85, 547, 45, 45)));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(157, 388, 45, 45)));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45)));
+        }
         public void Reset()
         {
             _currentTex = _leftTexture;
@@ -65,6 +73,10 @@ namespace Connect_four
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_currentTex, _location, Color.Green);
+        }
+        public void Draw(SpriteBatch spriteBatch, bool test)
+        {
+            spriteBatch.Draw(_currentTex, _location, Color.Blue);
         }
     }
 }

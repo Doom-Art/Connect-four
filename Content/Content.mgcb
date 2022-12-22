@@ -73,6 +73,12 @@
 /processorParam:TextureFormat=Color
 /build:Connect4Play.png
 
+#begin game_over.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:game_over.wav
+
 #begin GhostLeft.png
 /importer:TextureImporter
 /processor:TextureProcessor
