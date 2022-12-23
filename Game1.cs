@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 
 namespace Connect_four
@@ -19,7 +20,6 @@ namespace Connect_four
         float startTime;
         SpriteFont font;
         SpriteFont smallFont;
-        SoundEffect gameOver;
         SoundEffectInstance gameOverInstance;
         enum Screen
         {
@@ -48,6 +48,8 @@ namespace Connect_four
         bool gameWon;
         Button closeButton;
         Button helpButton;
+        SoundEffectInstance player1WonInstance;
+        SoundEffectInstance player2WonInstance;
 
         //Pacman variables:
         List<Barrier> barriers;
@@ -63,9 +65,13 @@ namespace Connect_four
         Texture2D pacRight;
         Texture2D barrierTex;
         Texture2D coinTex;
+        Texture2D circleTex;
         Texture2D ghostLeft;
         Texture2D ghostRight;
-        
+        SoundEffectInstance gameWonInstance;
+        SoundEffect coinSound;
+        SoundEffectInstance coinSoundInstance;
+
 
         public Game1()
         {
@@ -103,8 +109,12 @@ namespace Connect_four
 
             font = Content.Load<SpriteFont>("MilkyHoney");
             smallFont = Content.Load<SpriteFont>("Small Font");
-            gameOver = Content.Load<SoundEffect>("game_over");
-            gameOverInstance = gameOver.CreateInstance();
+            gameOverInstance = Content.Load<SoundEffect>("game_over").CreateInstance();
+            gameWonInstance = Content.Load<SoundEffect>("goodJobPac").CreateInstance();
+            player1WonInstance= Content.Load<SoundEffect>("Player1W").CreateInstance();
+            player2WonInstance = Content.Load<SoundEffect>("Player2W").CreateInstance();
+            coinSound = Content.Load<SoundEffect>("ding");
+            coinSoundInstance = coinSound.CreateInstance();
 
             questionIcon = Content.Load<Texture2D>("questionIcon");
             gameBoard = Content.Load<Texture2D>("Connect4Board");
@@ -121,6 +131,7 @@ namespace Connect_four
             coinTex = Content.Load<Texture2D>("coin");
             ghostLeft = Content.Load<Texture2D>("GhostLeft");
             ghostRight = Content.Load<Texture2D>("GhostRight");
+            circleTex = Content.Load<Texture2D>("circle");
         }
 
         protected override void Update(GameTime gameTime)
@@ -145,21 +156,31 @@ namespace Connect_four
                     }
                     if (pacPlayRect.Contains(mouseState.X, mouseState.Y)){
                         this.Window.Title = "Pacman";
-                        berries.Clear();
-                        berries.Add(new PowerUpBerry(coinTex, new Rectangle(755, 5, 40, 40), coins));
                         gameWon = false;
+                        powerUp = false;
                         pacman.Reset();
                         ghosts.Clear();
                         Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
                         screen = Screen.PacmanInstructions;
                         winner = 0;
                         Coin.SetCoins(coins, coinTex, barriers);
+                        PowerUpBerry.BerrySet(berries, circleTex, coins);
                     }
                 }
             }
             else if (screen == Screen.PacmanInstructions){
                 if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released) || keyboardState.IsKeyDown(Keys.Enter)){
                     screen = Screen.Pacman;
+                }
+                else if (keyboardState.IsKeyDown(Keys.L)){
+                    gameWon = false;
+                    pacman.Reset();
+                    ghosts.Clear();
+                    powerUp = false;
+                    ghosts.Clear();
+                    screen = Screen.Pacman;
+                    Coin.SetCoins(coins, coinTex, barriers);
+                    PowerUpBerry.BerrySet(berries, circleTex, coins);
                 }
                 if (keyboardState.IsKeyDown(Keys.D1))
                     pacman.SpeedSet(1);
@@ -169,6 +190,9 @@ namespace Connect_four
                     pacman.SpeedSet(3);
                 else if (keyboardState.IsKeyDown(Keys.D4))
                     pacman.SpeedSet(4);
+                else if (keyboardState.IsKeyDown(Keys.K)){
+                    pacman.SpeedSet(9);
+                }
             }
             else if (screen == Screen.Pacman){
                 if (!gameWon){
@@ -197,10 +221,12 @@ namespace Connect_four
                         if (pacman.Intersect(coins[i].Location())){
                             coins.RemoveAt(i);
                             i--;
+                            coinSound.Play(volume: 0.2f, pitch: 0.0f, pan: 0.0f);
                         }
                     }
-                    for (int i=0; i<berries.Count; i++){
-                        if (powerUp = berries[i].GetPowerUp(pacman.Location())){
+                    for (int i = 0; i < berries.Count; i++)
+                    {
+                        if (berries[i].GetPowerUp(pacman.Location())){
                             powerUp = true;
                             berries.RemoveAt(i);
                             i--;
@@ -216,9 +242,10 @@ namespace Connect_four
 
                         }
                     }
-                    
                     if (coins.Count == 0){
-                        gameWon = true; winner = 1;
+                        gameWon = true; 
+                        winner = 1;
+                        gameWonInstance.Play();
                     }
                     for(int i = 0; i<ghosts.Count; i++)
                     {
@@ -244,13 +271,21 @@ namespace Connect_four
                     else if (keyboardState.IsKeyDown(Keys.R)){
                         gameWon = false;
                         pacman.Reset();
-                        berries.Clear();
-                        berries.Add(new PowerUpBerry(coinTex, new Rectangle(755, 5, 40, 40), coins));
                         ghosts.Clear();
+                        powerUp = false;
                         Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
                         screen = Screen.Pacman;
-                        winner = 0;
                         Coin.SetCoins(coins, coinTex, barriers);
+                        PowerUpBerry.BerrySet(berries, circleTex, coins);
+                    }
+                    else if (keyboardState.IsKeyDown(Keys.L)){
+                        gameWon = false;
+                        pacman.Reset();
+                        ghosts.Clear();
+                        powerUp = false;
+                        screen = Screen.Pacman;
+                        Coin.SetCoins(coins, coinTex, barriers);
+                        PowerUpBerry.BerrySet(berries, circleTex, coins);
                     }
                 }
             }
@@ -280,6 +315,10 @@ namespace Connect_four
                             this.Window.Title = $"Player {winner} wins";
                             gameWon = true;
                             startTime = (float)gameTime.TotalGameTime.TotalSeconds;
+                            if (winner == 1)
+                                player1WonInstance.Play();
+                            else
+                                player2WonInstance.Play();
                         }
                         if (board.CheckStalemate()){
                             gameWon = true;
@@ -312,10 +351,10 @@ namespace Connect_four
             else if (screen == Screen.PacmanInstructions){
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Instructions", new Vector2(230, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click or press Enter to start the game\nAfter the game ends press R to restart or C to close\nGrab a power berry to get ghost eating powers for 5 seconds\nChoose the difficulty:\n1 for Hell\n2 for Normal (default) \n3 for Hacker Mode\n4 for Random Speeds", new Vector2(10, 120), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click or press Enter to start the game\nAfter the game ends press R to restart or C to close\nGrab a power berry to get ghost eating powers for 5 seconds (Can only eat one at a time)\nChoose the difficulty:\n1 for Hell\n2 for Normal (default) \n3 for Hacker Mode\n4 for Random Speeds\n'L' for exploration mode", new Vector2(10, 120), Color.Black);
             }
             else if(screen == Screen.Pacman){
-                GraphicsDevice.Clear(Color.Violet);
+                GraphicsDevice.Clear(Color.Turquoise);
                 pacman.Draw(_spriteBatch);
                 foreach (Barrier b in barriers)
                     b.Draw(_spriteBatch);

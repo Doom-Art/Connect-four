@@ -50,11 +50,17 @@ namespace Connect_four
                 _up = new Vector2(0, -(speed));
                 _down = new Vector2(0, (speed));
             }
-            else{
+            else if (speed == 4){
                 _left = new Vector2(-(Ghost.rand.Next(1, 4)), 0);
                 _right = new Vector2((Ghost.rand.Next(1, 4)), 0);
                 _up = new Vector2(0, -(Ghost.rand.Next(1, 4)));
                 _down = new Vector2(0, (Ghost.rand.Next(1, 4)));
+            }
+            else{
+                _left = new Vector2(-speed, 0);
+                _right = new Vector2((speed), 0);
+                _up = new Vector2(0, -(speed));
+                _down = new Vector2(0, (speed));
             }
         }
         public void Update(KeyboardState keyboardState)

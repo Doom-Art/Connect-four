@@ -73,6 +73,12 @@
 /processorParam:TextureFormat=Color
 /build:Connect4Play.png
 
+#begin ding.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:ding.mp3
+
 #begin game_over.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -102,6 +108,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:GhostRight.png
+
+#begin goodJobPac.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:goodJobPac.mp3
 
 #begin HelmetDown.png
 /importer:TextureImporter
@@ -173,6 +185,18 @@
 /processorParam:TextureFormat=Color
 /build:pacPlay.png
 
+#begin Player1W.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Player1W.mp3
+
+#begin Player2W.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Player2W.mp3
+
 #begin questionIcon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -196,30 +220,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:rectangle.png
-
-#begin road (2).jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:road (2).jpg
-
-#begin road.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:road.jpg
 
 #begin rock_barrier.png
 /importer:TextureImporter

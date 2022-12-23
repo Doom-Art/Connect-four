@@ -28,7 +28,7 @@ namespace Connect_four
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, _location, Color.DarkTurquoise);
+            spriteBatch.Draw(_texture, _location, Color.Violet);
         }
         public static void PositionSet(List<Barrier> barriers, Texture2D barrierTex)
         {
