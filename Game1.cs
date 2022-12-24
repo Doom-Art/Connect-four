@@ -221,7 +221,7 @@ namespace Connect_four
                         if (pacman.Intersect(coins[i].Location())){
                             coins.RemoveAt(i);
                             i--;
-                            coinSound.Play(volume: 0.2f, pitch: 0.0f, pan: 0.0f);
+                            coinSound.Play(volume: 0.1f, pitch: 0.0f, pan: 0.0f);
                         }
                     }
                     for (int i = 0; i < berries.Count; i++)
