@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System;
 using System.Collections.Generic;
 
 namespace Connect_four
@@ -21,13 +22,15 @@ namespace Connect_four
         SpriteFont font;
         SpriteFont smallFont;
         SoundEffectInstance gameOverInstance;
+        Random rand;
         enum Screen
         {
             Menu,
             Connect4,
             Connect4Help,
             Pacman,
-            PacmanInstructions
+            PacmanInstructions,
+            BuildingJumper
         }
         Screen screen;
 
@@ -70,7 +73,10 @@ namespace Connect_four
         Texture2D ghostRight;
         SoundEffectInstance gameWonInstance;
         SoundEffect coinSound;
-        SoundEffectInstance coinSoundInstance;
+
+        //Building Jumper
+        List<Building> buildings;
+        List<Texture2D> buildingTextures;
 
 
         public Game1()
@@ -82,18 +88,25 @@ namespace Connect_four
 
         protected override void Initialize()
         {
-            berries = new List<PowerUpBerry>();
+            //Menu and General vars
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
-            temp = true;
-            pacPlayRect = new Rectangle(150, 290, 200, 200);
-            c4Rect = new Rectangle(450, 290, 200, 200);
-            barriers = new List<Barrier>();
-            ghosts = new List<Ghost>();
-            coins = new List<Coin>();
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
             _graphics.ApplyChanges();
+            temp = true;
+            c4Rect = new Rectangle(450, 290, 200, 200);
+            pacPlayRect = new Rectangle(150, 290, 200, 200);
+            rand = new Random();
+
+            //Lists
+            berries = new List<PowerUpBerry>();
+            barriers = new List<Barrier>();
+            ghosts = new List<Ghost>();
+            coins = new List<Coin>();
+            buildings = new List<Building>();
+            buildingTextures = new List<Texture2D>();
+
             base.Initialize();
             closeButton = new Button(closeButtonTex, new Rectangle(720, 20, 50, 50));
             helpButton = new Button(questionIcon, new Rectangle(660, 20, 50, 50));
@@ -114,7 +127,6 @@ namespace Connect_four
             player1WonInstance= Content.Load<SoundEffect>("Player1W").CreateInstance();
             player2WonInstance = Content.Load<SoundEffect>("Player2W").CreateInstance();
             coinSound = Content.Load<SoundEffect>("ding");
-            coinSoundInstance = coinSound.CreateInstance();
 
             questionIcon = Content.Load<Texture2D>("questionIcon");
             gameBoard = Content.Load<Texture2D>("Connect4Board");
@@ -132,6 +144,10 @@ namespace Connect_four
             ghostLeft = Content.Load<Texture2D>("GhostLeft");
             ghostRight = Content.Load<Texture2D>("GhostRight");
             circleTex = Content.Load<Texture2D>("circle");
+
+            buildingTextures.Add(Content.Load<Texture2D>("buildingA"));
+            buildingTextures.Add(Content.Load<Texture2D>("buildingB"));
+            buildingTextures.Add(Content.Load<Texture2D>("house"));
         }
 
         protected override void Update(GameTime gameTime)
@@ -154,7 +170,7 @@ namespace Connect_four
                         board.Reset();
                         this.Window.Title = "Connect 4";
                     }
-                    if (pacPlayRect.Contains(mouseState.X, mouseState.Y)){
+                    else if (pacPlayRect.Contains(mouseState.X, mouseState.Y)){
                         this.Window.Title = "Pacman";
                         gameWon = false;
                         powerUp = false;
@@ -165,6 +181,22 @@ namespace Connect_four
                         winner = 0;
                         Coin.SetCoins(coins, coinTex, barriers);
                         PowerUpBerry.BerrySet(berries, circleTex, coins);
+                    }
+                }
+                else if (keyboardState.IsKeyDown(Keys.L)){
+                    screen = Screen.BuildingJumper;
+                    buildings.Clear();
+                    buildings.Add(new Building(buildingTextures[0], _graphics));
+                }
+            }
+            else if (screen == Screen.BuildingJumper){
+                for (int i = 0; i < buildings.Count; i++)
+                {
+                    buildings[i].Update();
+                    if (buildings[i].Location().Right < 0){
+                        buildings.Add(new Building(buildingTextures[rand.Next(0,3)], _graphics));
+                        buildings.RemoveAt(i);
+                        i--;
                     }
                 }
             }
@@ -278,6 +310,16 @@ namespace Connect_four
                         Coin.SetCoins(coins, coinTex, barriers);
                         PowerUpBerry.BerrySet(berries, circleTex, coins);
                     }
+                    else if (keyboardState.IsKeyDown(Keys.K)){
+                        gameWon = false;
+                        pacman.Reset();
+                        ghosts.Clear();
+                        powerUp = false;
+                        Ghost.GenerateOneGhost(ghosts, ghostLeft, ghostRight);
+                        screen = Screen.Pacman;
+                        Coin.SetCoins(coins, coinTex, barriers);
+                        PowerUpBerry.BerrySet(berries, circleTex, coins);
+                    }
                     else if (keyboardState.IsKeyDown(Keys.L)){
                         gameWon = false;
                         pacman.Reset();
@@ -347,6 +389,12 @@ namespace Connect_four
                 _spriteBatch.DrawString(font, "Arcade", new Vector2(280, 90), Color.Black);
                 _spriteBatch.Draw(pacPlay, pacPlayRect, Color.White);
                 _spriteBatch.Draw(connect4Play, c4Rect, Color.White);
+            }
+            else if(screen == Screen.BuildingJumper)
+            {
+                GraphicsDevice.Clear(Color.Turquoise);
+                foreach (Building b in buildings)
+                    b.Draw(_spriteBatch);
             }
             else if (screen == Screen.PacmanInstructions){
                 GraphicsDevice.Clear(Color.White);

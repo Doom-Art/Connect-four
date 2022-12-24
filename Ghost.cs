@@ -45,6 +45,10 @@ namespace Connect_four
             list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(157, 388, 45, 45), Color.Red));
             list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45), Color.Turquoise));
         }
+        public static void GenerateOneGhost(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight)
+        {
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
+        }
         public void Reset()
         {
             _currentTex = _leftTexture;
