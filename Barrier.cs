@@ -46,7 +46,7 @@ namespace Connect_four
             barriers.Add(new Barrier(barrierTex, new Rectangle(720, 380, width, 255)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(720, 60, width, 255)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(140, 140, 580, width)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(145, 535, 480, width)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(230, 535, 400, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 460, 480, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 260, width, 200)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(210, 240, width, 160)));

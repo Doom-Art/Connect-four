@@ -74,10 +74,12 @@ namespace Connect_four
         SoundEffectInstance gameWonInstance;
         SoundEffect coinSound;
 
-        //Building Jumper
+        //Building Jumper Lua Game
         List<Building> buildings;
         List<Texture2D> buildingTextures;
-
+        Jumper rabbitJumper;
+        Texture2D rabbitTex;
+        int score;
 
         public Game1()
         {
@@ -114,6 +116,8 @@ namespace Connect_four
             pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight, new Rectangle(5, 5, 50,50));
             Barrier.PositionSet(barriers, barrierTex);
             Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
+
+            rabbitJumper = new Jumper(rabbitTex, _graphics);
         }
 
         protected override void LoadContent()
@@ -148,6 +152,7 @@ namespace Connect_four
             buildingTextures.Add(Content.Load<Texture2D>("buildingA"));
             buildingTextures.Add(Content.Load<Texture2D>("buildingB"));
             buildingTextures.Add(Content.Load<Texture2D>("house"));
+            rabbitTex = Content.Load<Texture2D>("bunny");
         }
 
         protected override void Update(GameTime gameTime)
@@ -156,7 +161,7 @@ namespace Connect_four
             keyboardState = Keyboard.GetState();
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
-            //this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
+            this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (screen == Screen.Menu){
@@ -187,18 +192,38 @@ namespace Connect_four
                     screen = Screen.BuildingJumper;
                     buildings.Clear();
                     buildings.Add(new Building(buildingTextures[0], _graphics));
+                    score = 0;
                 }
             }
             else if (screen == Screen.BuildingJumper){
-                for (int i = 0; i < buildings.Count; i++)
-                {
-                    buildings[i].Update();
-                    if (buildings[i].Location().Right < 0){
-                        buildings.Add(new Building(buildingTextures[rand.Next(0,3)], _graphics));
-                        buildings.RemoveAt(i);
-                        i--;
+                this.Window.Title = $"Rabbit Jumper, Buildings Jumped: {score}";
+                if (!gameWon){
+                    rabbitJumper.Update(keyboardState, _graphics);
+                    for (int i = 0; i < buildings.Count; i++)
+                    {
+                        buildings[i].Update();
+                        if (buildings[i].Location().Intersects(rabbitJumper.Location())){
+                            //gameWon = true;
+                            score--;
+                        }
+                        else if (buildings[i].Location().Right < 0){
+                            buildings.Add(new Building(buildingTextures[rand.Next(0, 3)], _graphics));
+                            buildings.RemoveAt(i);
+                            i--;
+                            score++;
+                        }
                     }
                 }
+                else{
+                    if (keyboardState.IsKeyDown(Keys.R)){
+                        gameWon = false; 
+                        score= 0;
+                        rabbitJumper.Reset(_graphics);
+                        buildings.Clear();
+                        buildings.Add(new Building(buildingTextures[0], _graphics));
+                    }
+                }
+                
             }
             else if (screen == Screen.PacmanInstructions){
                 if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released) || keyboardState.IsKeyDown(Keys.Enter)){
@@ -295,8 +320,8 @@ namespace Connect_four
                     }
                 }
                 else{
-                    if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released) || keyboardState.IsKeyDown(Keys.C)){
-                        if (closeButton.Clicked(mouseState) || keyboardState.IsKeyDown(Keys.C))
+                    if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)){
+                        if (closeButton.Clicked(mouseState))
                             screen = Screen.Menu;
                         this.Window.Title = "Mini Arcade Menu";
                     }
@@ -309,8 +334,8 @@ namespace Connect_four
                         screen = Screen.Pacman;
                         Coin.SetCoins(coins, coinTex, barriers);
                         PowerUpBerry.BerrySet(berries, circleTex, coins);
-                    }
-                    else if (keyboardState.IsKeyDown(Keys.K)){
+                    }//One ghost mode is triggered by I
+                    else if (keyboardState.IsKeyDown(Keys.I)){
                         gameWon = false;
                         pacman.Reset();
                         ghosts.Clear();
@@ -329,6 +354,11 @@ namespace Connect_four
                         Coin.SetCoins(coins, coinTex, barriers);
                         PowerUpBerry.BerrySet(berries, circleTex, coins);
                     }
+                }
+                if (keyboardState.IsKeyDown(Keys.C))
+                {
+                    screen = Screen.Menu;
+                    this.Window.Title = "Mini Arcade Menu";
                 }
             }
             else if(screen == Screen.Connect4){
@@ -395,6 +425,11 @@ namespace Connect_four
                 GraphicsDevice.Clear(Color.Turquoise);
                 foreach (Building b in buildings)
                     b.Draw(_spriteBatch);
+                rabbitJumper.Draw(_spriteBatch);
+                if (gameWon)
+                {
+                    _spriteBatch.DrawString(font, "You Lose", new Vector2(200, 300), Color.Black);
+                }
             }
             else if (screen == Screen.PacmanInstructions){
                 GraphicsDevice.Clear(Color.White);
