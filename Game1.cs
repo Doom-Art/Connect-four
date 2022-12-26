@@ -203,8 +203,7 @@ namespace Connect_four
                     {
                         buildings[i].Update();
                         if (buildings[i].Location().Intersects(rabbitJumper.Location())){
-                            //gameWon = true;
-                            score--;
+                            gameWon = true;
                         }
                         else if (buildings[i].Location().Right < 0){
                             buildings.Add(new Building(buildingTextures[rand.Next(0, 3)], _graphics));
