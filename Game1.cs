@@ -113,7 +113,7 @@ namespace Connect_four
             closeButton = new Button(closeButtonTex, new Rectangle(720, 20, 50, 50));
             helpButton = new Button(questionIcon, new Rectangle(660, 20, 50, 50));
             board = new Board(gameBoard, gamePiece);
-            pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight, new Rectangle(5, 5, 50,50));
+            pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight);
             Barrier.PositionSet(barriers, barrierTex);
             Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
 
@@ -152,6 +152,8 @@ namespace Connect_four
             buildingTextures.Add(Content.Load<Texture2D>("buildingA"));
             buildingTextures.Add(Content.Load<Texture2D>("buildingB"));
             buildingTextures.Add(Content.Load<Texture2D>("house"));
+            buildingTextures.Add(Content.Load<Texture2D>("buildingC"));
+            buildingTextures.Add(Content.Load<Texture2D>("buildingD"));
             rabbitTex = Content.Load<Texture2D>("bunny");
         }
 
@@ -203,10 +205,11 @@ namespace Connect_four
                     {
                         buildings[i].Update();
                         if (buildings[i].Location().Intersects(rabbitJumper.Location())){
-                            gameWon = true;
+                            //gameWon = true;
+                            gameOverInstance.Play();
                         }
                         else if (buildings[i].Location().Right < 0){
-                            buildings.Add(new Building(buildingTextures[rand.Next(0, 3)], _graphics));
+                            buildings.Add(new Building(buildingTextures[rand.Next(0, 5)], _graphics, rand.Next(2,4), rand.Next(170,211)));
                             buildings.RemoveAt(i);
                             i--;
                             score++;
@@ -248,6 +251,14 @@ namespace Connect_four
                     pacman.SpeedSet(4);
                 else if (keyboardState.IsKeyDown(Keys.K)){
                     pacman.SpeedSet(9);
+                }
+                else if (keyboardState.IsKeyDown(Keys.A)){
+                    pacman.SetSize(10);
+                    pacman.Reset();
+                }
+                else if (keyboardState.IsKeyDown(Keys.N)){
+                    pacman.SetSize(45);
+                    pacman.Reset();
                 }
             }
             else if (screen == Screen.Pacman){
@@ -333,16 +344,6 @@ namespace Connect_four
                         screen = Screen.Pacman;
                         Coin.SetCoins(coins, coinTex, barriers);
                         PowerUpBerry.BerrySet(berries, circleTex, coins);
-                    }//One ghost mode is triggered by I
-                    else if (keyboardState.IsKeyDown(Keys.I)){
-                        gameWon = false;
-                        pacman.Reset();
-                        ghosts.Clear();
-                        powerUp = false;
-                        Ghost.GenerateOneGhost(ghosts, ghostLeft, ghostRight);
-                        screen = Screen.Pacman;
-                        Coin.SetCoins(coins, coinTex, barriers);
-                        PowerUpBerry.BerrySet(berries, circleTex, coins);
                     }
                     else if (keyboardState.IsKeyDown(Keys.L)){
                         gameWon = false;
@@ -365,6 +366,7 @@ namespace Connect_four
                     IsMouseVisible = true;
                 else
                     IsMouseVisible = false;
+                
                 if(mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                     if (closeButton.Clicked(mouseState)) {
                         screen = Screen.Menu;
@@ -397,6 +399,18 @@ namespace Connect_four
                             gameOverInstance.Play();
                         }
                     }
+                }
+                else if (keyboardState.IsKeyDown(Keys.C)){
+                    screen = Screen.Menu;
+                    this.Window.Title = "Mini Arcade Menu";
+                    IsMouseVisible = true;
+                }
+                else if (keyboardState.IsKeyDown(Keys.R) && gameWon){
+                    winner = 0;
+                    playerTurn = 1;
+                    gameWon = false;
+                    board.Reset();
+                    this.Window.Title = "Connect 4";
                 }
             }
             else if(screen == Screen.Connect4Help){
@@ -433,7 +447,7 @@ namespace Connect_four
             else if (screen == Screen.PacmanInstructions){
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Instructions", new Vector2(230, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click or press Enter to start the game\nAfter the game ends press R to restart or C to close\nGrab a power berry to get ghost eating powers for 5 seconds (Can only eat one at a time)\nChoose the difficulty:\n1 for Hell\n2 for Normal (default) \n3 for Hacker Mode\n4 for Random Speeds\n'L' for exploration mode", new Vector2(10, 120), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click or press Enter to start the game\nAfter the game ends press R to restart or C to close\nGrab a power berry to get ghost eating powers for 5 seconds (Can only eat one at a time)\nChoose the difficulty:\n1 for Hell\n2 for Normal (default) \n3 for Hacker Mode\n4 for Random Speeds\n'L' for exploration mode\n\nPress A for ant size\nPress N for normal size (default)", new Vector2(10, 120), Color.Black);
             }
             else if(screen == Screen.Pacman){
                 GraphicsDevice.Clear(Color.Turquoise);
@@ -507,7 +521,7 @@ namespace Connect_four
                 closeButton.Draw(_spriteBatch);
                 _spriteBatch.DrawString(font, "Rules", new Vector2(300, 20), Color.Black);
                 _spriteBatch.DrawString(smallFont, "Left Click a column to drop a piece", new Vector2(10, 120), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Players must connect 4 of the same colored discs in a row to win.\nOnly one piece is played at a time.\nPlayers can be on the offensive or defensive.\r\nThe game ends when there is a 4-in-a-row or a stalemate.\r\nPress the close button to return to the game", new Vector2(10, 150), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Players must connect 4 of the same colored discs in a row to win.\nOnly one piece is played at a time.\nPlayers can be on the offensive or defensive.\r\nThe game ends when there is a 4-in-a-row or a stalemate.\r\nPress C or the close button to return to the menu\nPress R to restart the game when it ends", new Vector2(10, 150), Color.Black);
             }
             
             _spriteBatch.End();

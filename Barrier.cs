@@ -48,10 +48,12 @@ namespace Connect_four
             barriers.Add(new Barrier(barrierTex, new Rectangle(140, 140, 580, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(230, 535, 400, width)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 460, 480, width)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(145, 260, width, 200)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(145, 240, width, 220)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(210, 240, width, 160)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(210, 400, 300, width)));
-            barriers.Add(new Barrier(barrierTex, new Rectangle(210, 240, 450, width)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(145, 240, 200, width)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(420, 240, 200, width)));
+            barriers.Add(new Barrier(barrierTex, new Rectangle(610, 240, width, 220)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(145, 535, width, 80)));
             barriers.Add(new Barrier(barrierTex, new Rectangle(350, 616, width, 80)));
             //barriers.Add(new Barrier(barrierTex, new Rectangle(709, 530, 30, width)));

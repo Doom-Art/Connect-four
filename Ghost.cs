@@ -42,8 +42,9 @@ namespace Connect_four
             list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
             list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45), Color.Green));
             list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(85, 547, 45, 45), Color.Purple));
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(157, 388, 45, 45), Color.Red));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(160, 480, 45, 45), Color.Red));
             list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45), Color.Turquoise));
+            //list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(7, 650, 45, 45), Color.Orange));
         }
         public static void GenerateOneGhost(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight)
         {

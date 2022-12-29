@@ -33,7 +33,7 @@ namespace Connect_four
         {
             berries.Clear();
             berries.Add(new PowerUpBerry(tex, new Rectangle(755, 5, 40, 40), coins));
-            berries.Add(new PowerUpBerry(tex, new Rectangle(225, 360, 40, 40), coins));
+            berries.Add(new PowerUpBerry(tex, new Rectangle(9, 645, 40, 40), coins));
         }
         public bool GetPowerUp(Rectangle rect)
         {

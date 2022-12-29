@@ -22,15 +22,16 @@ namespace Connect_four
         private Vector2 _right;
         private Vector2 _up;
         private Vector2 _down;
-        public Pacman(Texture2D pacUp, Texture2D pacDown, Texture2D pacLeft, Texture2D pacRight, Rectangle location)
+        private int _size;
+        public Pacman(Texture2D pacUp, Texture2D pacDown, Texture2D pacLeft, Texture2D pacRight)
         {
             _pacUp = pacUp;
             _pacDown = pacDown;
             _pacLeft = pacLeft;
             _pacRight = pacRight;
-            _location = location;
             _speed = new Vector2(0,0);
             _pacCurrentTex = _pacRight;
+            _size = 45;
             int speed = 2;
             _left = new Vector2(-speed, 0);
             _right = new Vector2((speed), 0);
@@ -42,25 +43,23 @@ namespace Connect_four
             _location.X += (int)_speed.X;
             _location.Y += (int)_speed.Y;
         }
+        public void SetSize(int size)
+        {
+            _size = size;
+        }
         public void SpeedSet(int speed)
         {
-            if (speed < 4){
+            if (speed != 4){
                 _left = new Vector2(-speed, 0);
                 _right = new Vector2((speed), 0);
                 _up = new Vector2(0, -(speed));
                 _down = new Vector2(0, (speed));
             }
-            else if (speed == 4){
+            else{
                 _left = new Vector2(-(Ghost.rand.Next(1, 4)), 0);
                 _right = new Vector2((Ghost.rand.Next(1, 4)), 0);
                 _up = new Vector2(0, -(Ghost.rand.Next(1, 4)));
                 _down = new Vector2(0, (Ghost.rand.Next(1, 4)));
-            }
-            else{
-                _left = new Vector2(-speed, 0);
-                _right = new Vector2((speed), 0);
-                _up = new Vector2(0, -(speed));
-                _down = new Vector2(0, (speed));
             }
         }
         public void Update(KeyboardState keyboardState)
@@ -125,7 +124,7 @@ namespace Connect_four
         {
             _speed = new Vector2(0, 0);
             _pacCurrentTex = _pacRight;
-            _location = new Rectangle(5, 5, 45, 45);
+            _location = new Rectangle(5, 5, _size, _size);
         }
     }
 }

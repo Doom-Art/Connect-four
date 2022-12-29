@@ -44,7 +44,7 @@ namespace Connect_four
         }
         public void Update(KeyboardState keys, GraphicsDeviceManager graphics)
         {
-            if (keys.IsKeyDown(Keys.Space) && !_isJump){
+            if ((keys.IsKeyDown(Keys.Space) || keys.IsKeyDown(Keys.Up))&& !_isJump){
                 Jump();
             }
             if (_isJump){

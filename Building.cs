@@ -22,8 +22,20 @@ namespace Connect_four
         public Building(Texture2D tex, GraphicsDeviceManager graphics)
         {
             _texture = tex;
-            _location = new Rectangle(graphics.PreferredBackBufferWidth+20, graphics.PreferredBackBufferHeight-200, 100, 200);
-            _speed = new Vector2(-2,0);
+            _location = new Rectangle(graphics.PreferredBackBufferWidth + 20, graphics.PreferredBackBufferHeight - 200, 100, 200);
+            _speed = new Vector2(-2, 0);
+        }
+        public Building(Texture2D tex, GraphicsDeviceManager graphics, int speed)
+        {
+            _texture = tex;
+            _location = new Rectangle(graphics.PreferredBackBufferWidth + 20, graphics.PreferredBackBufferHeight - 200, 100, 200);
+            _speed = new Vector2(-speed, 0);
+        }
+        public Building(Texture2D tex, GraphicsDeviceManager graphics, int speed, int height)
+        {
+            _texture = tex;
+            _location = new Rectangle(graphics.PreferredBackBufferWidth + 20, graphics.PreferredBackBufferHeight - height, 100, height);
+            _speed = new Vector2(-speed, 0);
         }
         public void Update()
         {
