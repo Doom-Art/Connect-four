@@ -30,7 +30,8 @@ namespace Connect_four
             Connect4Help,
             Pacman,
             PacmanInstructions,
-            BuildingJumper
+            BuildingJumper,
+            Shogi
         }
         Screen screen;
 
@@ -96,7 +97,7 @@ namespace Connect_four
         {
             //Menu and General vars
             this.Window.Title = "Mini Arcade Menu";
-            screen = Screen.Menu;
+            screen = Screen.Shogi;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
             _graphics.ApplyChanges();
@@ -122,7 +123,7 @@ namespace Connect_four
             Barrier.PositionSet(barriers, barrierTex);
             Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
             rabbitJumper = new Jumper(rabbitTex, _graphics);
-            //shogiBoard = new Shogi_Board(shogiPieceTextures);
+            shogiBoard = new Shogi_Board(shogiPieceTextures);
 
         }
 
@@ -163,6 +164,7 @@ namespace Connect_four
             rabbitTex = Content.Load<Texture2D>("bunny");
 
             //Shogi Pieces
+            shogiPieceTextures.Add(Content.Load<Texture2D>("rectangle"));
             shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/pawn1"));
             shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/pawn2"));
             shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Lance1"));
@@ -179,6 +181,19 @@ namespace Connect_four
             shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Rook2"));
             shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/King1"));
             shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/King2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PPawn1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PPawn2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PLance1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PLance2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PKnight1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PKnight2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PSilver1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PSilver2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PBishop1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PBishop2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PRook1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/PRook2"));
+
 
 
         }
@@ -189,7 +204,7 @@ namespace Connect_four
             keyboardState = Keyboard.GetState();
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
-            this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
+            //this.Window.Title = $"Mouse X: {mouseState.X} Mouse Y: {mouseState.Y}";
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (screen == Screen.Menu){
@@ -231,7 +246,7 @@ namespace Connect_four
                     {
                         buildings[i].Update();
                         if (buildings[i].Location().Intersects(rabbitJumper.Location())){
-                            //gameWon = true;
+                            gameWon = true;
                             gameOverInstance.Play();
                         }
                         else if (buildings[i].Location().Right < 0){
@@ -249,6 +264,9 @@ namespace Connect_four
                         rabbitJumper.Reset(_graphics);
                         buildings.Clear();
                         buildings.Add(new Building(buildingTextures[0], _graphics));
+                    }
+                    else if (keyboardState.IsKeyDown(Keys.C)){
+                        screen = Screen.Menu;
                     }
                 }
                 
@@ -459,6 +477,11 @@ namespace Connect_four
                 _spriteBatch.Draw(pacPlay, pacPlayRect, Color.White);
                 _spriteBatch.Draw(connect4Play, c4Rect, Color.White);
             }
+            else if(screen == Screen.Shogi)
+            {
+                GraphicsDevice.Clear(Color.DarkGray);
+                shogiBoard.Draw(_spriteBatch);
+            }
             else if(screen == Screen.BuildingJumper)
             {
                 GraphicsDevice.Clear(Color.Turquoise);
@@ -473,7 +496,7 @@ namespace Connect_four
             else if (screen == Screen.PacmanInstructions){
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Instructions", new Vector2(230, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click or press Enter to start the game\nAfter the game ends press R to restart or C to close\nGrab a power berry to get ghost eating powers for 5 seconds (Can only eat one at a time)\nChoose the difficulty:\n1 for Hell\n2 for Normal (default) \n3 for Hacker Mode\n4 for Random Speeds\n'L' for exploration mode\n\nPress A for ant size\nPress N for normal size (default)", new Vector2(10, 120), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click or press Enter to start the game\nAfter the game ends press R to restart or C to close\nGrab a power berry to get ghost eating powers for 5 seconds\nChoose the difficulty:\n1 for Hell\n2 for Normal (default) \n3 for Hacker Mode\n4 for Random Speeds\n'L' for exploration mode\n\nPress A for ant size\nPress N for normal size (default)", new Vector2(10, 120), Color.Black);
             }
             else if(screen == Screen.Pacman){
                 GraphicsDevice.Clear(Color.Turquoise);
