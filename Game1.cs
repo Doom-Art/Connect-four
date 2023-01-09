@@ -165,6 +165,22 @@ namespace Connect_four
             //Shogi Pieces
             shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/pawn1"));
             shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/pawn2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Lance1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Lance2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Knight1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Knight2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Silver1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Silver2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Gold1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Gold2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Bishop1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Bishop2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Rook1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/Rook2"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/King1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/King2"));
+
+
         }
 
         protected override void Update(GameTime gameTime)
