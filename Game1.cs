@@ -81,6 +81,10 @@ namespace Connect_four
         Texture2D rabbitTex;
         int score;
 
+        //Shogi
+        List<Texture2D> shogiPieceTextures;
+        Shogi_Board shogiBoard;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -108,6 +112,7 @@ namespace Connect_four
             coins = new List<Coin>();
             buildings = new List<Building>();
             buildingTextures = new List<Texture2D>();
+            shogiPieceTextures = new List<Texture2D>();
 
             base.Initialize();
             closeButton = new Button(closeButtonTex, new Rectangle(720, 20, 50, 50));
@@ -116,8 +121,9 @@ namespace Connect_four
             pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight);
             Barrier.PositionSet(barriers, barrierTex);
             Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
-
             rabbitJumper = new Jumper(rabbitTex, _graphics);
+            //shogiBoard = new Shogi_Board(shogiPieceTextures);
+
         }
 
         protected override void LoadContent()
@@ -155,6 +161,10 @@ namespace Connect_four
             buildingTextures.Add(Content.Load<Texture2D>("buildingC"));
             buildingTextures.Add(Content.Load<Texture2D>("buildingD"));
             rabbitTex = Content.Load<Texture2D>("bunny");
+
+            //Shogi Pieces
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/pawn1"));
+            shogiPieceTextures.Add(Content.Load<Texture2D>("shogiPieces/pawn2"));
         }
 
         protected override void Update(GameTime gameTime)
