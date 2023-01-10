@@ -97,7 +97,10 @@ namespace Connect_four
         {
             //Menu and General vars
             this.Window.Title = "Mini Arcade Menu";
+            screen = Screen.Menu;
+            //
             screen = Screen.Shogi;
+            playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
             _graphics.ApplyChanges();
@@ -236,6 +239,16 @@ namespace Connect_four
                     buildings.Clear();
                     buildings.Add(new Building(buildingTextures[0], _graphics));
                     score = 0;
+                }
+            }
+            else if(screen == Screen.Shogi){
+                if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
+                    if (shogiBoard.MouseClicked(mouseState, playerTurn)){
+                        if (playerTurn == 1)
+                            playerTurn = 2;
+                        else
+                            playerTurn = 1;
+                    }
                 }
             }
             else if (screen == Screen.BuildingJumper){

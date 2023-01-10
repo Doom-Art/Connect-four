@@ -12,8 +12,8 @@ namespace Connect_four
     {
         private Texture2D _texture1;
         private Texture2D _texture2;
-        private Texture2D _promoted1;
-        private Texture2D _promoted2;
+        private Texture2D _promotedTex1;
+        private Texture2D _promotedTex2;
         private int _pieceType;
         private int _player;
         private bool _promoted;
@@ -30,8 +30,8 @@ namespace Connect_four
         {
             _texture1 = texture1;
             _texture2 = texture2;
-            _promoted1 = promoted1;
-            _promoted2 = promoted2;
+            _promotedTex1 = promoted1;
+            _promotedTex2 = promoted2;
             _pieceType = pieceType;
             _player = player;
             _promoted = false;
@@ -47,8 +47,8 @@ namespace Connect_four
         {
             _texture1 = texture1;
             _texture2 = texture2;
-            _promoted1 = null;
-            _promoted2 = null;
+            _promotedTex1 = null;
+            _promotedTex2 = null;
             _pieceType = pieceType;
             _player = player;
             _promoted = false;
@@ -63,9 +63,82 @@ namespace Connect_four
             }
             else{
                 if (_player == 1)
-                    spriteBatch.Draw(_promoted1, rect, Color.White);
+                    spriteBatch.Draw(_promotedTex1, rect, Color.White);
                 else
-                    spriteBatch.Draw(_promoted2, rect, Color.White);
+                    spriteBatch.Draw(_promotedTex2, rect, Color.White);
+            }
+        }
+        public int PieceType()
+        {
+            return _pieceType;
+        }
+        public int Player()
+        {
+            return _player;
+        }
+        public bool Promoted()
+        {
+            return _promoted;
+        }
+
+        public static void PieceClicked(int[,] board, ShogiPiece[,] pieces, int X, int Y)
+        {
+            if (pieces[X,Y].PieceType() == 1){
+                if (pieces[X,Y].Player() == 1){
+                    if (!pieces[X, Y].Promoted()){
+                        board[X, Y - 1] = -1;
+                    }
+                }
+                else{
+                    if (!pieces[X, Y].Promoted()){
+                        board[X, Y + 1] = -1;
+                    }
+                }
+            }
+            else if(pieces[X,Y].PieceType() == 2){
+                if (pieces[X, Y].Player() == 1){
+                    if (!pieces[X, Y].Promoted()){
+                        bool temp = true;
+                        board[X, Y - 1] = -1;
+                        for (int i = Y-1; i >= 0; i--){
+                            if (pieces[X,i] == null && temp){
+                                board[X, i] = -1;
+                            }
+                            else if (temp){
+                                if (pieces[X, i].Player() == 2)
+                                {
+                                    board[X, i] = -1;
+                                    temp = false;
+                                }
+                                else
+                                    temp = false;
+                            }
+                        }
+                    }
+                }
+                else{
+                    if (!pieces[X, Y].Promoted()){
+                        bool temp = true;
+                        board[X, Y + 1] = -1;
+                        for (int i = Y + 1; i < 9; i++)
+                        {
+                            if (pieces[X, i] == null && temp)
+                            {
+                                board[X, i] = -1;
+                            }
+                            else if (temp)
+                            {
+                                if (pieces[X, i].Player() == 1)
+                                {
+                                    board[X, i] = -1;
+                                    temp = false;
+                                }
+                                else
+                                    temp = false;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
