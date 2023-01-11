@@ -91,7 +91,7 @@ namespace Connect_four
                 for (int j = 0; j < 9; ++j)
                 {
                     if (_pieces[i, j] != null)
-                        _pieces[i, j].Draw(spriteBatch, new Rectangle((60 * i) + 125, (60 * j) + 83, 59, 59));
+                        _pieces[i, j].Draw(spriteBatch, new Rectangle((60 * i) + 126, (60 * j) + 84, 57, 57));
                 }
             }
         }
@@ -110,13 +110,17 @@ namespace Connect_four
                 {
                     for (int j = 0; j < 9; ++j)
                     {
-                        if (new Rectangle((60 * i) + 125, (60 * j) + 83, 59, 59).Contains(mouse.X, mouse.Y)){
+                        if (new Rectangle((60 * i) + 126, (60 * j) + 84, 57, 57).Contains(mouse.X, mouse.Y)){
                             if (_boardPositions[i,j] == -1){
                                 if (_pieces[i,j] != null){
-                                    if (_pieces[i, j].Player() == 1)
+                                    if (_pieces[i, j].Player() == 1){
                                         _player2Bench.Add(_pieces[i, j]);
-                                    else
+                                        _pieces[i, j].PlayerChange();
+                                    }
+                                    else{
                                         _player2Bench.Add(_pieces[i, j]);
+                                        _pieces[i, j].PlayerChange();
+                                    }
                                 }
                                 _pieces[i, j] = _pieces[pieceX, pieceY];
                                 _pieces[pieceX, pieceY] = null;
@@ -135,9 +139,9 @@ namespace Connect_four
                     for (int j = 0; j < 9; ++j)
                     {
                         if (_pieces[i, j] != null){
-                            if (new Rectangle((60 * i) + 125, (60 * j) + 83, 59, 59).Contains(mouse.X, mouse.Y)){
+                            if (new Rectangle((60 * i) + 125, (60 * j) + 83, 58, 58).Contains(mouse.X, mouse.Y)){
                                 if (_pieces[i,j].Player() == playerTurn){
-                                    ShogiPiece.PieceClicked(_boardPositions, _pieces, i, j);
+                                    ShogiPiece.PieceClicked(_boardPositions, _pieces, i, j,playerTurn);
                                     isPieceClicked = true;                                         
                                     pieceX = i; pieceY = j;
                                 }

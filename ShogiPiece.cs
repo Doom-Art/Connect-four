@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -68,6 +69,14 @@ namespace Connect_four
                     spriteBatch.Draw(_promotedTex2, rect, Color.White);
             }
         }
+        public void PlayerChange()
+        {
+            _promoted = false;
+            if (_player == 1)
+                _player = 2;
+            else 
+                _player = 1;
+        }
         public int PieceType()
         {
             return _pieceType;
@@ -81,25 +90,41 @@ namespace Connect_four
             return _promoted;
         }
 
-        public static void PieceClicked(int[,] board, ShogiPiece[,] pieces, int X, int Y)
+        public static void PieceClicked(int[,] board, ShogiPiece[,] pieces, int X, int Y, int playerTurn)
         {
             if (pieces[X,Y].PieceType() == 1){
                 if (pieces[X,Y].Player() == 1){
                     if (!pieces[X, Y].Promoted()){
-                        board[X, Y - 1] = -1;
+                        if (pieces[X,Y-1] != null){
+                            if (pieces[X, Y - 1].Player() != 1){
+                                board[X, Y - 1] = -1;
+                            }
+                        }
+                        else
+                            board[X, Y - 1] = -1;
                     }
                 }
                 else{
                     if (!pieces[X, Y].Promoted()){
-                        board[X, Y + 1] = -1;
+                        if (!pieces[X, Y].Promoted())
+                        {
+                            if (pieces[X, Y + 1] != null)
+                            {
+                                if (pieces[X, Y + 1].Player() != 2)
+                                {
+                                    board[X, Y + 1] = -1;
+                                }
+                            }
+                            else
+                                board[X, Y + 1] = -1;
+                        }
                     }
                 }
-            }
+            }//Pawn Movement
             else if(pieces[X,Y].PieceType() == 2){
                 if (pieces[X, Y].Player() == 1){
                     if (!pieces[X, Y].Promoted()){
                         bool temp = true;
-                        board[X, Y - 1] = -1;
                         for (int i = Y-1; i >= 0; i--){
                             if (pieces[X,i] == null && temp){
                                 board[X, i] = -1;
@@ -119,7 +144,6 @@ namespace Connect_four
                 else{
                     if (!pieces[X, Y].Promoted()){
                         bool temp = true;
-                        board[X, Y + 1] = -1;
                         for (int i = Y + 1; i < 9; i++)
                         {
                             if (pieces[X, i] == null && temp)
@@ -139,7 +163,370 @@ namespace Connect_four
                         }
                     }
                 }
-            }
+            } //Lance Movement
+            else if (pieces[X,Y].PieceType() == 3){
+                if (pieces[X, Y].Player() == 1)
+                {
+                    if (!pieces[X, Y].Promoted()){
+                        if (pieces[X - 1, Y - 2] != null){
+                            if (pieces[X - 1, Y - 2].Player() != 1){
+                                board[X - 1, Y - 2] = -1;
+                            }
+                        }
+                        else
+                            board[X - 1, Y - 2] = -1;
+                        if (pieces[X + 1, Y - 2] != null){
+                            if (pieces[X + 1, Y - 2].Player() != 1){
+                                board[X + 1, Y - 2] = -1;
+                            }
+                        }
+                        else
+                            board[X + 1, Y - 2] = -1;
+                    }
+                        
+                }
+                else
+                {
+                    if (!pieces[X, Y].Promoted())
+                    {
+                        if (pieces[X - 1, Y + 2] != null)
+                        {
+                            if (pieces[X - 1, Y + 2].Player() != 2)
+                            {
+                                board[X - 1, Y + 2] = -1;
+                            }
+                        }
+                        else
+                            board[X - 1, Y + 2] = -1;
+                        if (pieces[X + 1, Y + 2] != null)
+                        {
+                            if (pieces[X + 1, Y + 2].Player() != 2)
+                            {
+                                board[X + 1, Y + 2] = -1;
+                            }
+                        }
+                        else
+                            board[X + 1, Y + 2] = -1;
+                    }
+                }
+            }//Knight Movement
+            else if (pieces[X, Y].PieceType() == 4)
+            {
+
+            }//Silver Movement
+            else if (pieces[X, Y].PieceType() == 5)
+            {
+
+            }//Gold Movement
+            else if (pieces[X, Y].PieceType() == 6)
+            {
+                bool temp = true;
+                for (int i = X - 1; i >= 0; i--)
+                {
+                    for (int j = Y - 1; j >= 0; j--)
+                    {
+                        if (pieces[i, j] == null && temp)
+                        {
+                            board[i, j] = -1;
+                        }
+                        else if (temp)
+                        {
+                            if (pieces[i, j].Player() != playerTurn)
+                            {
+                                board[i, j] = -1;
+                                temp = false;
+                            }
+                            else
+                                temp = false;
+                        }
+                    }
+                }//Up Left Diagonal
+                temp = true;
+                for (int i = X + 1; i <9; i++)
+                {
+                    for (int j = Y - 1; j >= 0; j--)
+                    {
+                        if (pieces[i, j] == null && temp)
+                        {
+                            board[i, j] = -1;
+                        }
+                        else if (temp)
+                        {
+                            if (pieces[i, j].Player() != playerTurn)
+                            {
+                                board[i, j] = -1;
+                                temp = false;
+                            }
+                            else
+                                temp = false;
+                        }
+                    }
+                }//Up Right Diagonal
+                temp = true;
+                for (int i = X + 1; i < 9; i++)
+                {
+                    for (int j = Y + 1; j <9; j++)
+                    {
+                        if (pieces[i, j] == null && temp)
+                        {
+                            board[i, j] = -1;
+                        }
+                        else if (temp)
+                        {
+                            if (pieces[i, j].Player() != playerTurn)
+                            {
+                                board[i, j] = -1;
+                                temp = false;
+                            }
+                            else
+                                temp = false;
+                        }
+                    }
+                }//Down Right Diagonal
+                temp = true;
+                for (int i = X - 1; i >= 0; i--)
+                {
+                    for (int j = Y + 1; j <9; j++)
+                    {
+                        if (pieces[i, j] == null && temp)
+                        {
+                            board[i, j] = -1;
+                        }
+                        else if (temp)
+                        {
+                            if (pieces[i, j].Player() != playerTurn)
+                            {
+                                board[i, j] = -1;
+                                temp = false;
+                            }
+                            else
+                                temp = false;
+                        }
+                    }
+                }//Down Left Diagonal
+
+            }//Bishop Movement
+            else if (pieces[X, Y].PieceType() == 7){
+                bool temp = true;
+                for (int i = Y + 1; i < 9; i++)
+                {
+                    if (pieces[X, i] == null && temp)
+                    {
+                        board[X, i] = -1;
+                    }
+                    else if (temp)
+                    {
+                        if (pieces[X, i].Player() != playerTurn)
+                        {
+                            board[X, i] = -1;
+                            temp = false;
+                        }
+                        else
+                            temp = false;
+                    }
+                }//Down
+                temp = true;
+                for (int i = Y - 1; i >= 0; i--)
+                {
+                    if (pieces[X, i] == null && temp)
+                    {
+                        board[X, i] = -1;
+                    }
+                    else if (temp)
+                    {
+                        if (pieces[X, i].Player() != playerTurn)
+                        {
+                            board[X, i] = -1;
+                            temp = false;
+                        }
+                        else
+                            temp = false;
+                    }
+                }//Up
+                temp = true;
+                for (int j = X + 1; j < 9; j++)
+                {
+                    if (pieces[j, Y] == null && temp){
+                        board[j, Y] = -1;
+                    }
+                    else if (temp)
+                    {
+                        if (pieces[j, Y].Player() != playerTurn){
+                            board[j, Y] = -1;
+                            temp = false;
+                        }
+                        else
+                            temp = false;
+                    }
+                }//Right
+                temp = true;
+                for (int j = X - 1; j >= 0; j--)
+                {
+                    if (pieces[j, Y] == null && temp){
+                        board[j, Y] = -1;
+                    }
+                    else if (temp){
+                        if (pieces[j, Y].Player() != playerTurn){
+                            board[j, Y] = -1;
+                            temp = false;
+                        }
+                        else
+                            temp = false;
+                    }
+                }//Left
+                if (pieces[X, Y].Promoted()){
+                    if (X - 1 >= 0 && Y - 1 >= 0)
+                    {
+                        if (pieces[X - 1, Y - 1] != null)
+                        {
+                            if (pieces[X - 1, Y - 1].Player() != playerTurn)
+                            {
+                                board[X - 1, Y - 1] = -1;
+                            }
+                        }
+                        else
+                            board[X - 1, Y - 1] = -1;
+                    }//Up Left Diagonal
+                    if (X + 1 < 9 && Y - 1 >= 0)
+                    {
+                        if (pieces[X + 1, Y - 1] != null)
+                        {
+                            if (pieces[X + 1, Y - 1].Player() != playerTurn)
+                            {
+                                board[X + 1, Y - 1] = -1;
+                            }
+                        }
+                        else
+                            board[X + 1, Y - 1] = -1;
+                    }// Up Right Diagonal
+                    if (X - 1 >= 0 && Y + 1 < 9)
+                    {
+                        if (pieces[X - 1, Y + 1] != null)
+                        {
+                            if (pieces[X - 1, Y + 1].Player() != playerTurn)
+                            {
+                                board[X - 1, Y + 1] = -1;
+                            }
+                        }
+                        else
+                            board[X - 1, Y + 1] = -1;
+                    }//Down Left Diagonal
+                    if (X + 1 < 9 && Y + 1 < 9)
+                    {
+                        if (pieces[X + 1, Y + 1] != null)
+                        {
+                            if (pieces[X + 1, Y + 1].Player() != playerTurn)
+                            {
+                                board[X + 1, Y + 1] = -1;
+                            }
+                        }
+                        else
+                            board[X + 1, Y + 1] = -1;
+                    }//Down Right Diagonal
+                }
+            }//Rook Movement
+            else if (pieces[X, Y].PieceType() == 8){
+                if (Y-1 >= 0)
+                {
+                    if (pieces[X, Y - 1] != null)
+                    {
+                        if (pieces[X, Y - 1].Player() != playerTurn)
+                        {
+                            board[X, Y - 1] = -1;
+                        }
+                    }
+                    else
+                        board[X, Y - 1] = -1;
+                }//Up One
+                if (Y + 1 < 9)
+                {
+                    if (pieces[X, Y + 1] != null)
+                    {
+                        if (pieces[X, Y + 1].Player() != playerTurn)
+                        {
+                            board[X, Y + 1] = -1;
+                        }
+                    }
+                    else
+                        board[X, Y + 1] = -1;
+                }//Down One    
+                if (X-1 >= 0 && Y-1 >= 0)
+                {
+                    if (pieces[X - 1, Y - 1] != null)
+                    {
+                        if (pieces[X - 1, Y - 1].Player() != playerTurn)
+                        {
+                            board[X - 1, Y - 1] = -1;
+                        }
+                    }
+                    else
+                        board[X - 1, Y - 1] = -1;
+                }//Up Left Diagonal
+                if (X +1 <9 && Y - 1 >= 0)
+                {
+                    if (pieces[X+1, Y - 1] != null)
+                    {
+                        if (pieces[X+1, Y - 1].Player() != playerTurn)
+                        {
+                            board[X+1, Y - 1] = -1;
+                        }
+                    }
+                    else
+                        board[X+1, Y - 1] = -1;
+                }// Up Right Diagonal
+                if (X - 1 >= 0){
+                    if (pieces[X - 1, Y] != null)
+                    {
+                        if (pieces[X - 1, Y].Player() != playerTurn)
+                        {
+                            board[X - 1, Y] = -1;
+                        }
+                    }
+                    else
+                        board[X - 1,Y] = -1;
+                }//Left One
+                if (X + 1 <9)
+                {
+                    if (pieces[X + 1, Y] != null)
+                    {
+                        if (pieces[X + 1, Y].Player() != playerTurn)
+                        {
+                            board[X + 1, Y] = -1;
+                        }
+                    }
+                    else
+                        board[X + 1, Y] = -1;
+                }//Right One
+                if (X - 1 >= 0 && Y + 1 < 9)
+                {
+                    if (pieces[X - 1, Y + 1] != null)
+                    {
+                        if (pieces[X - 1, Y + 1].Player() != playerTurn)
+                        {
+                            board[X - 1, Y + 1] = -1;
+                        }
+                    }
+                    else
+                        board[X - 1, Y + 1] = -1;
+                }//Down Left Diagonal
+                if (X + 1 < 9 && Y + 1 < 9)
+                {
+                    if (pieces[X + 1, Y + 1] != null)
+                    {
+                        if (pieces[X + 1, Y + 1].Player() != playerTurn)
+                        {
+                            board[X + 1, Y + 1] = -1;
+                        }
+                    }
+                    else
+                        board[X + 1, Y + 1] = -1;
+                }//Down Right Diagonal
+
+            }//King Movement
+        }
+        public void Promote()
+        {
+            _promoted = true;
         }
     }
 }
