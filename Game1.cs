@@ -99,7 +99,7 @@ namespace Connect_four
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
             //
-            //screen = Screen.Shogi;
+            screen = Screen.Shogi;
             playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
@@ -435,11 +435,11 @@ namespace Connect_four
                     }
                     else if (!gameWon){
                         if (board.PlayerTurn(mouseState, playerTurn)){
-                            /*if (playerTurn == 1)
+                            if (playerTurn == 1)
                                  playerTurn = 2;
                             else if (playerTurn == 2)
-                                playerTurn = 1;*/
-                            board.PlayerTurnAI(2);
+                                playerTurn = 1;
+                            //board.PlayerTurnAI(2);
                         }
                         winner = board.CheckForFour();
                         if (winner != 0){
