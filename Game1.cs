@@ -126,7 +126,7 @@ namespace Connect_four
             Barrier.PositionSet(barriers, barrierTex);
             Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
             rabbitJumper = new Jumper(rabbitTex, _graphics);
-            shogiBoard = new Shogi_Board(shogiPieceTextures);
+            shogiBoard = new Shogi_Board(shogiPieceTextures, smallFont);
 
         }
 
