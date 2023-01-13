@@ -467,20 +467,24 @@ namespace Connect_four
                 if (pieces[X, Y].Player() == 1)
                 {
                     if (!pieces[X, Y].Promoted()){
-                        if (pieces[X - 1, Y - 2] != null){
-                            if (pieces[X - 1, Y - 2].Player() != 1){
+                        if (X-1 >=0 && Y-2 >= 0){
+                            if (pieces[X - 1, Y - 2] != null){
+                                if (pieces[X - 1, Y - 2].Player() != 1){
+                                    board[X - 1, Y - 2] = -1;
+                                }
+                            }
+                            else
                                 board[X - 1, Y - 2] = -1;
-                            }
                         }
-                        else
-                            board[X - 1, Y - 2] = -1;
-                        if (pieces[X + 1, Y - 2] != null){
-                            if (pieces[X + 1, Y - 2].Player() != 1){
+                        if(X+1 < 9 && Y - 2 >= 0){
+                            if (pieces[X + 1, Y - 2] != null){
+                                if (pieces[X + 1, Y - 2].Player() != 1){
+                                    board[X + 1, Y - 2] = -1;
+                                }
+                            }
+                            else
                                 board[X + 1, Y - 2] = -1;
-                            }
                         }
-                        else
-                            board[X + 1, Y - 2] = -1;
                     }
                     else
                     {
@@ -563,24 +567,30 @@ namespace Connect_four
                 {
                     if (!pieces[X, Y].Promoted())
                     {
-                        if (pieces[X - 1, Y + 2] != null)
+                        if (X - 1 >= 0 && Y + 2 <9)
                         {
-                            if (pieces[X - 1, Y + 2].Player() != 2)
+                            if (pieces[X - 1, Y + 2] != null)
                             {
+                                if (pieces[X - 1, Y + 2].Player() != 2)
+                                {
+                                    board[X - 1, Y + 2] = -1;
+                                }
+                            }
+                            else
                                 board[X - 1, Y + 2] = -1;
-                            }
                         }
-                        else
-                            board[X - 1, Y + 2] = -1;
-                        if (pieces[X + 1, Y + 2] != null)
+                        if (X + 1 <9 && Y + 2 < 9)
                         {
-                            if (pieces[X + 1, Y + 2].Player() != 2)
+                            if (pieces[X + 1, Y + 2] != null)
                             {
-                                board[X + 1, Y + 2] = -1;
+                                if (pieces[X + 1, Y + 2].Player() != 2)
+                                {
+                                    board[X + 1, Y + 2] = -1;
+                                }
                             }
+                            else
+                                board[X + 1, Y + 2] = -1;
                         }
-                        else
-                            board[X + 1, Y + 2] = -1;
                     }
                     else
                     {
