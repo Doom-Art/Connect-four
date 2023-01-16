@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualBasic.FileIO;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +79,23 @@ namespace Connect_four
         {
             pieceType -= 1;
             _storedPieces[pieceType] += 1;
+        }
+        public ShogiPiece PieceToDrop(int pieceType)
+        {
+            return _piecesToDrop[(pieceType - 1)];
+        }
+        public int IsBenchClicked(MouseState mouseState)
+        {
+            int temp = -1;
+            for (int i = 1; i < 8; i++)
+            {
+                if (new Rectangle(_startPositionX, (_startPositionY + (50 * (i - 1))), 40, 40).Contains(mouseState.X, mouseState.Y))
+                    temp = i;
+            }
+            if (temp != -1)
+                if (_storedPieces[temp - 1] <= 0)
+                    temp = -1;
+            return temp;
         }
     }
 }

@@ -27,6 +27,7 @@ namespace Connect_four
         private Texture2D _rectTexture;
         private bool _isPieceClicked;
         private int _pieceX; private int _pieceY;
+        private int _dropPieceType;
 
         public Shogi_Board(List<Texture2D> textures, SpriteFont font)
         {
@@ -114,18 +115,28 @@ namespace Connect_four
                 for (int i = 0; i < 9; ++i)
                     for (int j = 0; j < 9; ++j)
                         if (new Rectangle((60 * i) + 126, (60 * j) + 84, 57, 57).Contains(mouse.X, mouse.Y))
-                            if (_boardPositions[i,j] == -1){
-                                if (_pieces[i,j] != null){
+                            if (_boardPositions[i, j] == -1) {
+                                if (_pieceX == -1){
                                     if (playerTurn == 1){
-                                        p1Bench.AddPiece(_pieces[i, j].PieceType());
+                                        _pieces[i, j] = p1Bench.PieceToDrop(_dropPieceType);
                                     }
                                     else{
-                                        p2Bench.AddPiece(_pieces[i, j].PieceType());
+                                        _pieces[i, j] = p2Bench.PieceToDrop(_dropPieceType);
                                     }
+                                    moved = true;
                                 }
-                                _pieces[i, j] = _pieces[_pieceX, _pieceY];
-                                _pieces[_pieceX, _pieceY] = null;
-                                moved = true;
+                                else
+                                {
+                                    if (_pieces[i, j] != null){
+                                        if (playerTurn == 1)
+                                            p1Bench.AddPiece(_pieces[i, j].PieceType());
+                                        else
+                                            p2Bench.AddPiece(_pieces[i, j].PieceType());
+                                    }
+                                    _pieces[i, j] = _pieces[_pieceX, _pieceY];
+                                    _pieces[_pieceX, _pieceY] = null;
+                                    moved = true;
+                                }
                             }
                 _isPieceClicked = false;
                 ResetSquareBoard();
@@ -144,6 +155,66 @@ namespace Connect_four
                                     _pieceX = i; _pieceY = j;
                                 }
                             }
+                        }
+                    }
+                }
+                if (!_isPieceClicked)
+                {
+                    if (playerTurn == 1)
+                    {
+                        int temp = p1Bench.IsBenchClicked(mouse);
+                        if (temp != -1)
+                        {
+                            if (temp == 1 || temp == 2)
+                            {
+                                for (int i = 0; i < 9; ++i)
+                                    for (int j = 1; j < 9; j++)
+                                        if (_pieces[i, j] == null)
+                                            _boardPositions[i, j] = -1;
+                            }
+                            else if (temp == 3)
+                            {
+                                for (int i = 0; i < 9; ++i)
+                                    for (int j = 2; j < 9; j++)
+                                        if (_pieces[i, j] == null)
+                                            _boardPositions[i, j] = -1;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < 9; ++i)
+                                    for (int j = 0; j < 9; j++)
+                                        if (_pieces[i, j] == null)
+                                            _boardPositions[i, j] = -1;
+                            }
+                            _isPieceClicked = true; _pieceX = -1; _dropPieceType = temp;
+                        }
+                    }
+                    else{
+                        int temp = p2Bench.IsBenchClicked(mouse);
+                        if (temp != -1)
+                        {
+                            if (temp == 1 || temp == 2)
+                            {
+                                for (int i = 0; i < 9; ++i)
+                                    for (int j = 7; j >= 0; j--)
+                                        if (_pieces[i, j] == null)
+                                            _boardPositions[i, j] = -1;
+                            }
+                            else if (temp == 3)
+                            {
+                                for (int i = 0; i < 9; ++i)
+                                    for (int j = 6; j >= 0; j--)
+                                        if (_pieces[i, j] == null)
+                                            _boardPositions[i, j] = -1;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < 9; ++i)
+                                    for (int j = 0; j < 9; j++)
+                                        if (_pieces[i, j] == null)
+                                            _boardPositions[i, j] = -1;
+                            }
+                            _isPieceClicked = true; _pieceX = -1; _dropPieceType = temp;
                         }
                     }
                 }
