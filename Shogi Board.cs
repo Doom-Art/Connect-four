@@ -61,19 +61,19 @@ namespace Connect_four
             _pieces[6, 0] = new ShogiPiece(textures[7], textures[8], textures[23], textures[24], 4, 2);
             _pieces[2, 8] = new ShogiPiece(textures[7], textures[8], textures[23], textures[24], 4, 1);
             _pieces[6, 8] = new ShogiPiece(textures[7], textures[8], textures[23], textures[24], 4, 1);//Silver
-            _pieces[5, 8] = new ShogiPiece(textures[9], textures[10], 5, 1);//Gold
-            _pieces[3, 8] = new ShogiPiece(textures[9], textures[10], 5, 1);
-            _pieces[3, 0] = new ShogiPiece(textures[9], textures[10], 5, 2);
-            _pieces[5, 0] = new ShogiPiece(textures[9], textures[10], 5, 2);//Gold
+            _pieces[5, 8] = new ShogiPiece(textures[9], textures[10], textures[9], textures[10], 5, 1);//Gold
+            _pieces[3, 8] = new ShogiPiece(textures[9], textures[10], textures[9], textures[10], 5, 1);
+            _pieces[3, 0] = new ShogiPiece(textures[9], textures[10], textures[9], textures[10], 5, 2);
+            _pieces[5, 0] = new ShogiPiece(textures[9], textures[10], textures[9], textures[10], 5, 2);//Gold
             _pieces[1, 7] = new ShogiPiece(textures[11], textures[12], textures[25], textures[26], 6, 1);//Bishop
             _pieces[7, 1] = new ShogiPiece(textures[11], textures[12], textures[25], textures[26], 6, 2);//Bishop
             _pieces[7, 7] = new ShogiPiece(textures[13], textures[14], textures[27], textures[28], 7, 1);//Rook
             _pieces[1, 1] = new ShogiPiece(textures[13], textures[14], textures[27], textures[28], 7, 2);//Rook
-            _pieces[4, 8] = new ShogiPiece(textures[15], textures[16], 8, 1);//King
-            _pieces[4, 0] = new ShogiPiece(textures[15], textures[16], 8, 2);//King
+            _pieces[4, 8] = new ShogiPiece(textures[15], textures[16], textures[15], textures[16], 8, 1);//King
+            _pieces[4, 0] = new ShogiPiece(textures[15], textures[16], textures[15], textures[16], 8, 2);//King
 
-            p1Bench.ClonePiece(_pieces[0, 6], _pieces[0, 8], _pieces[1, 8], _pieces[2, 8], _pieces[3, 8], _pieces[1, 7], _pieces[7, 7]);
-            p2Bench.ClonePiece(_pieces[0, 2], _pieces[0, 0], _pieces[1, 0], _pieces[2, 0], _pieces[3, 0], _pieces[7, 1], _pieces[1, 1]);
+            p1Bench.ClonePiece(_pieces[0, 6].Clone(), _pieces[0, 8].Clone(), _pieces[1, 8].Clone(), _pieces[2, 8].Clone(), _pieces[3, 8].Clone(), _pieces[1, 7].Clone(), _pieces[7, 7].Clone());
+            p2Bench.ClonePiece(_pieces[0, 2].Clone(), _pieces[0, 0].Clone(), _pieces[1, 0].Clone(), _pieces[2, 0].Clone(), _pieces[3, 0].Clone(), _pieces[7, 1].Clone(), _pieces[1, 1].Clone());
 
         }
 
@@ -118,20 +118,29 @@ namespace Connect_four
                             if (_boardPositions[i, j] == -1) {
                                 if (_pieceX == -1){
                                     if (playerTurn == 1){
-                                        _pieces[i, j] = p1Bench.PieceToDrop(_dropPieceType);
+                                        _pieces[i, j] = p1Bench.PieceToDrop(_dropPieceType).Clone();
                                     }
                                     else{
-                                        _pieces[i, j] = p2Bench.PieceToDrop(_dropPieceType);
+                                        _pieces[i, j] = p2Bench.PieceToDrop(_dropPieceType).Clone();
                                     }
                                     moved = true;
                                 }
-                                else
-                                {
+                                else if (!moved){
+                                    if (playerTurn == 1){
+                                        if (j <= 2 || _pieceY <= 2)
+                                            _pieces[_pieceX, _pieceY].Promote();
+                                    }
+                                    else if (playerTurn == 2){
+                                        if (j >= 6 || _pieceY >= 6)
+                                            _pieces[_pieceX, _pieceY].Promote();
+                                    }
                                     if (_pieces[i, j] != null){
-                                        if (playerTurn == 1)
+                                        if (playerTurn == 1){
                                             p1Bench.AddPiece(_pieces[i, j].PieceType());
-                                        else
+                                        }
+                                        else{
                                             p2Bench.AddPiece(_pieces[i, j].PieceType());
+                                        }
                                     }
                                     _pieces[i, j] = _pieces[_pieceX, _pieceY];
                                     _pieces[_pieceX, _pieceY] = null;

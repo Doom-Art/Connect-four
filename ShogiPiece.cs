@@ -1462,5 +1462,9 @@ namespace Connect_four
         {
             _promoted = true;
         }
+        public ShogiPiece Clone()
+        {
+            return new ShogiPiece(this._texture1, this._texture2, this._promotedTex1, this._promotedTex2, this._pieceType, this._player);
+        }
     }
 }

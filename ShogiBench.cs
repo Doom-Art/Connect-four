@@ -82,6 +82,7 @@ namespace Connect_four
         }
         public ShogiPiece PieceToDrop(int pieceType)
         {
+            _storedPieces[pieceType - 1] -= 1;
             return _piecesToDrop[(pieceType - 1)];
         }
         public int IsBenchClicked(MouseState mouseState)
