@@ -177,9 +177,10 @@ namespace Connect_four
                 for (int j = 0; j < 6; j++)
                     _boardPositions[i, j] = 0;
         }
-        public void SaveGame(StreamWriter writer)
+        public void SaveGame(StreamWriter writer, int playerTurn)
         {
             string temp;
+            writer.WriteLine(playerTurn);
             for (int j = 0; j<6; j++)
             {
                 temp = "";
@@ -190,20 +191,30 @@ namespace Connect_four
                 writer.WriteLine(temp);
             }
         }
-        public void LoadGame(string txtFileName)
+        public int LoadGame(string txtFileName)
         {
+            int playerTurn = 0;
             int j = 0;
+            bool tempTrue = true;
             foreach (string line in File.ReadLines(@txtFileName))
             {
-                
-                for (int i = 0; i < 7; i++){
-                    string temp = "";
-                    temp += line[i];
-                    Int32.TryParse(temp, out int d);
-                    _boardPositions[i, j] = d;
+                if (tempTrue)
+                {
+                    Int32.TryParse(line, out playerTurn);
+                    tempTrue = false;
                 }
-                j++;
+                else{
+                    for (int i = 0; i < 7; i++)
+                    {
+                        string temp = "";
+                        temp += line[i];
+                        Int32.TryParse(temp, out int d);
+                        _boardPositions[i, j] = d;
+                    }
+                    j++;
+                }
             }
+            return playerTurn;
         }
     }
 }

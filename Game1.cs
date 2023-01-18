@@ -440,14 +440,14 @@ namespace Connect_four
                         screen = Screen.Connect4Help;
                         this.Window.Title = "Connect 4 Rules/Instructions";
                     }
-                    else if (saveButton.Clicked(mouseState)){
+                    else if (!gameWon && saveButton.Clicked(mouseState)){
                         StreamWriter writer = new StreamWriter("saved.txt");
-                        board.SaveGame(writer);
+                        board.SaveGame(writer,playerTurn);
                         writer.Close();
                     }
-                    else if (loadButton.Clicked(mouseState)){
+                    else if (!gameWon && loadButton.Clicked(mouseState)){
                         if (File.Exists("saved.txt")){
-                            board.LoadGame("saved.txt");
+                            playerTurn = board.LoadGame("saved.txt");
                         }
                     }
                     else if (!gameWon){
@@ -564,8 +564,6 @@ namespace Connect_four
                 GraphicsDevice.Clear(Color.White);
                 closeButton.Draw(_spriteBatch);
                 helpButton.Draw(_spriteBatch);
-                saveButton.Draw(_spriteBatch);
-                loadButton.Draw(_spriteBatch);
                 board.Draw(_spriteBatch);
                 //Below code is for drawing the game piece when the mouse is on the board
                 if (mouseState.Y > 100){
@@ -579,6 +577,8 @@ namespace Connect_four
                     }
                 }
                 if (!gameWon){
+                    saveButton.Draw(_spriteBatch);
+                    loadButton.Draw(_spriteBatch);
                     if (playerTurn == 1)
                         _spriteBatch.DrawString(font, "Player 1's Turn", new Vector2(0, 10), Color.Red);
                     else if (playerTurn == 2)
@@ -586,15 +586,15 @@ namespace Connect_four
                 }
                 else{
                     if (winner == 1){
-                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(30, 7), Color.Gold);
-                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(33, 10), Color.Red);
+                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(102, 7), Color.Gold);
+                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(105, 10), Color.Red);
                     }
                     else if (winner == 2){
-                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(30, 7), Color.Gold);
-                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(33, 10), Color.Black);
+                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(102, 7), Color.Gold);
+                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(105, 10), Color.Black);
                     }
                     else if (winner == -1)
-                        _spriteBatch.DrawString(font, "No one wins", new Vector2(80, 10), Color.Turquoise);
+                        _spriteBatch.DrawString(font, "No one wins", new Vector2(130, 10), Color.Turquoise);
                 }
             }
             //below code is for connect 4 help screen
