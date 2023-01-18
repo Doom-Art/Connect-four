@@ -18,6 +18,7 @@ namespace Connect_four
         MouseState mouseState;
         MouseState prevMouseState;
         KeyboardState keyboardState;
+        KeyboardState prevKeyboardState;
         float seconds;
         float startTime;
         SpriteFont font;
@@ -43,6 +44,7 @@ namespace Connect_four
         Rectangle c4Rect;
 
         // Connect 4 variables:
+        bool undoC4Move;
         Texture2D gameBoard;
         Texture2D gamePiece;
         List<Texture2D> buttonTextures;
@@ -107,6 +109,7 @@ namespace Connect_four
             _graphics.PreferredBackBufferHeight = 700;
             _graphics.ApplyChanges();
             temp = true;
+            undoC4Move = false;
             c4Rect = new Rectangle(450, 290, 200, 200);
             pacPlayRect = new Rectangle(150, 290, 200, 200);
             rand = new Random();
@@ -211,6 +214,7 @@ namespace Connect_four
         protected override void Update(GameTime gameTime)
         {
             seconds = (float)gameTime.TotalGameTime.TotalSeconds - startTime;
+            prevKeyboardState = keyboardState;
             keyboardState = Keyboard.GetState();
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
@@ -450,13 +454,15 @@ namespace Connect_four
                             playerTurn = board.LoadGame("saved.txt");
                         }
                     }
-                    else if (!gameWon){
+                    else if (!gameWon && seconds > .8){
                         if (board.PlayerTurn(mouseState, playerTurn)){
                             if (playerTurn == 1)
                                  playerTurn = 2;
                             else if (playerTurn == 2)
                                 playerTurn = 1;
                             //board.PlayerTurnAI(2);
+                            undoC4Move = false;
+                            startTime = (float)gameTime.TotalGameTime.TotalSeconds;
                         }
                         winner = board.CheckForFour();
                         if (winner != 0){
@@ -474,6 +480,14 @@ namespace Connect_four
                             gameOverInstance.Play();
                         }
                     }
+                }
+                else if (keyboardState.IsKeyDown(Keys.Z) && prevKeyboardState.IsKeyDown(Keys.Z) && !undoC4Move && !gameWon){
+                    board.Undo();
+                    if (playerTurn == 1)
+                        playerTurn = 2;
+                    else if (playerTurn == 2)
+                        playerTurn = 1;
+                    undoC4Move = true;
                 }
                 else if (keyboardState.IsKeyDown(Keys.C)){
                     screen = Screen.Menu;
