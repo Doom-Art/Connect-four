@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -175,6 +176,34 @@ namespace Connect_four
             for (int i = 0; i < 7; i++)
                 for (int j = 0; j < 6; j++)
                     _boardPositions[i, j] = 0;
+        }
+        public void SaveGame(StreamWriter writer)
+        {
+            string temp;
+            for (int j = 0; j<6; j++)
+            {
+                temp = "";
+                for (int i = 0; i < 7; i++)
+                {
+                    temp += _boardPositions[i, j];
+                }
+                writer.WriteLine(temp);
+            }
+        }
+        public void LoadGame(string txtFileName)
+        {
+            int j = 0;
+            foreach (string line in File.ReadLines(@txtFileName))
+            {
+                
+                for (int i = 0; i < 7; i++){
+                    string temp = "";
+                    temp += line[i];
+                    Int32.TryParse(temp, out int d);
+                    _boardPositions[i, j] = d;
+                }
+                j++;
+            }
         }
     }
 }

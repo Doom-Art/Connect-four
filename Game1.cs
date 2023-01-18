@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Connect_four
 {
@@ -100,7 +101,7 @@ namespace Connect_four
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
             //
-            screen = Screen.Shogi;
+            //screen = Screen.Shogi;
             playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
@@ -121,10 +122,10 @@ namespace Connect_four
             buttonTextures = new List<Texture2D>();
 
             base.Initialize();
-            closeButton = new Button(buttonTextures[0], new Rectangle(720, 20, 50, 50));
-            helpButton = new Button(buttonTextures[1], new Rectangle(660, 20, 50, 50));
-            saveButton = new Button(buttonTextures[2], new Rectangle(600, 20, 50, 50));
-            loadButton = new Button(buttonTextures[3], new Rectangle(540, 20, 50, 50));
+            closeButton = new Button(buttonTextures[0], new Rectangle(740, 20, 50, 50));
+            helpButton = new Button(buttonTextures[1], new Rectangle(680, 20, 50, 50));
+            saveButton = new Button(buttonTextures[2], new Rectangle(620, 20, 50, 50));
+            loadButton = new Button(buttonTextures[3], new Rectangle(560, 20, 50, 50));
             board = new Board(gameBoard, gamePiece);
             pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight);
             Barrier.PositionSet(barriers, barrierTex);
@@ -439,6 +440,16 @@ namespace Connect_four
                         screen = Screen.Connect4Help;
                         this.Window.Title = "Connect 4 Rules/Instructions";
                     }
+                    else if (saveButton.Clicked(mouseState)){
+                        StreamWriter writer = new StreamWriter("saved.txt");
+                        board.SaveGame(writer);
+                        writer.Close();
+                    }
+                    else if (loadButton.Clicked(mouseState)){
+                        if (File.Exists("saved.txt")){
+                            board.LoadGame("saved.txt");
+                        }
+                    }
                     else if (!gameWon){
                         if (board.PlayerTurn(mouseState, playerTurn)){
                             if (playerTurn == 1)
@@ -553,6 +564,8 @@ namespace Connect_four
                 GraphicsDevice.Clear(Color.White);
                 closeButton.Draw(_spriteBatch);
                 helpButton.Draw(_spriteBatch);
+                saveButton.Draw(_spriteBatch);
+                loadButton.Draw(_spriteBatch);
                 board.Draw(_spriteBatch);
                 //Below code is for drawing the game piece when the mouse is on the board
                 if (mouseState.Y > 100){
@@ -567,21 +580,21 @@ namespace Connect_four
                 }
                 if (!gameWon){
                     if (playerTurn == 1)
-                        _spriteBatch.DrawString(font, "Player 1's Turn", new Vector2(100, 10), Color.Red);
+                        _spriteBatch.DrawString(font, "Player 1's Turn", new Vector2(0, 10), Color.Red);
                     else if (playerTurn == 2)
-                        _spriteBatch.DrawString(font, "Player 2's Turn", new Vector2(100, 10), Color.Black);
+                        _spriteBatch.DrawString(font, "Player 2's Turn", new Vector2(0, 10), Color.Black);
                 }
                 else{
                     if (winner == 1){
-                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(102, 7), Color.Gold);
-                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(105, 10), Color.Red);
+                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(30, 7), Color.Gold);
+                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(33, 10), Color.Red);
                     }
                     else if (winner == 2){
-                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(102, 7), Color.Gold);
-                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(105, 10), Color.Black);
+                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(30, 7), Color.Gold);
+                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(33, 10), Color.Black);
                     }
                     else if (winner == -1)
-                        _spriteBatch.DrawString(font, "No one wins", new Vector2(120, 10), Color.Turquoise);
+                        _spriteBatch.DrawString(font, "No one wins", new Vector2(80, 10), Color.Turquoise);
                 }
             }
             //below code is for connect 4 help screen
