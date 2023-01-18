@@ -44,14 +44,15 @@ namespace Connect_four
         // Connect 4 variables:
         Texture2D gameBoard;
         Texture2D gamePiece;
-        Texture2D closeButtonTex;
-        Texture2D questionIcon;
+        List<Texture2D> buttonTextures;
         int playerTurn;
         int winner;
         Board board;
         bool gameWon;
         Button closeButton;
         Button helpButton;
+        Button saveButton;
+        Button loadButton;
         SoundEffectInstance player1WonInstance;
         SoundEffectInstance player2WonInstance;
 
@@ -117,10 +118,13 @@ namespace Connect_four
             buildings = new List<Building>();
             buildingTextures = new List<Texture2D>();
             shogiPieceTextures = new List<Texture2D>();
+            buttonTextures = new List<Texture2D>();
 
             base.Initialize();
-            closeButton = new Button(closeButtonTex, new Rectangle(720, 20, 50, 50));
-            helpButton = new Button(questionIcon, new Rectangle(660, 20, 50, 50));
+            closeButton = new Button(buttonTextures[0], new Rectangle(720, 20, 50, 50));
+            helpButton = new Button(buttonTextures[1], new Rectangle(660, 20, 50, 50));
+            saveButton = new Button(buttonTextures[2], new Rectangle(600, 20, 50, 50));
+            loadButton = new Button(buttonTextures[3], new Rectangle(540, 20, 50, 50));
             board = new Board(gameBoard, gamePiece);
             pacman = new Pacman(pacUp, pacDown, pacLeft, pacRight);
             Barrier.PositionSet(barriers, barrierTex);
@@ -142,12 +146,14 @@ namespace Connect_four
             player2WonInstance = Content.Load<SoundEffect>("Player2W").CreateInstance();
             coinSound = Content.Load<SoundEffect>("ding");
 
-            questionIcon = Content.Load<Texture2D>("questionIcon");
+            buttonTextures.Add(Content.Load<Texture2D>("close_box_red"));
+            buttonTextures.Add(Content.Load<Texture2D>("questionIcon"));
+            buttonTextures.Add(Content.Load<Texture2D>("save"));
+            buttonTextures.Add(Content.Load<Texture2D>("download"));
             gameBoard = Content.Load<Texture2D>("Connect4Board");
             pacPlay = Content.Load<Texture2D>("pacPlay");
             connect4Play = Content.Load<Texture2D>("Connect4Play");
             gamePiece = Content.Load<Texture2D>("circle");
-            closeButtonTex = Content.Load<Texture2D>("close_box_red");
 
             pacDown = Content.Load<Texture2D>("HelmetDown");
             pacUp = Content.Load<Texture2D>("HelmetUp");
