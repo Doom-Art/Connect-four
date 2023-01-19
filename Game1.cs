@@ -463,7 +463,7 @@ namespace Connect_four
                             //board.PlayerTurnAI(2);
                             undoC4Move = false;
                             startTime = (float)gameTime.TotalGameTime.TotalSeconds;
-                        }
+                        } 
                         winner = board.CheckForFour();
                         if (winner != 0){
                             this.Window.Title = $"Player {winner} wins";
@@ -623,6 +623,62 @@ namespace Connect_four
             _spriteBatch.End();
             base.Draw(gameTime);
         }
-        
+        public string LetterType(KeyboardState keyboard, KeyboardState prevKeyboard)
+        {
+            string c = "";
+            if (keyboard.IsKeyDown(Keys.A) && prevKeyboard.IsKeyUp(Keys.A))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.B) && prevKeyboard.IsKeyUp(Keys.B))
+                c += 'B';
+            else if (keyboard.IsKeyDown(Keys.C) && prevKeyboard.IsKeyUp(Keys.C))
+                c += 'C';
+            else if (keyboard.IsKeyDown(Keys.D) && prevKeyboard.IsKeyUp(Keys.D))
+                c += 'D';
+            else if (keyboard.IsKeyDown(Keys.E) && prevKeyboard.IsKeyUp(Keys.E))
+                c += 'E';
+            else if (keyboard.IsKeyDown(Keys.F) && prevKeyboard.IsKeyUp(Keys.F))
+                c += 'F';
+            else if (keyboard.IsKeyDown(Keys.G) && prevKeyboard.IsKeyUp(Keys.G))
+                c += 'G';
+            else if (keyboard.IsKeyDown(Keys.H) && prevKeyboard.IsKeyUp(Keys.H))
+                c += 'H';
+            else if (keyboard.IsKeyDown(Keys.I) && prevKeyboard.IsKeyUp(Keys.I))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.J) && prevKeyboard.IsKeyUp(Keys.J))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.K) && prevKeyboard.IsKeyUp(Keys.K))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.L) && prevKeyboard.IsKeyUp(Keys.L))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.M) && prevKeyboard.IsKeyUp(Keys.M))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.N) && prevKeyboard.IsKeyUp(Keys.N))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.O) && prevKeyboard.IsKeyUp(Keys.O))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.P) && prevKeyboard.IsKeyUp(Keys.P))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.Q) && prevKeyboard.IsKeyUp(Keys.Q))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.R) && prevKeyboard.IsKeyUp(Keys.R))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.S) && prevKeyboard.IsKeyUp(Keys.S))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.T) && prevKeyboard.IsKeyUp(Keys.T))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.U) && prevKeyboard.IsKeyUp(Keys.U))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.V) && prevKeyboard.IsKeyUp(Keys.V))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.W) && prevKeyboard.IsKeyUp(Keys.W))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.X) && prevKeyboard.IsKeyUp(Keys.X))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.Y) && prevKeyboard.IsKeyUp(Keys.Y))
+                c += 'A';
+            else if (keyboard.IsKeyDown(Keys.Z) && prevKeyboard.IsKeyUp(Keys.Z))
+                c += 'A';
+            return c;
+        }
     }
 }

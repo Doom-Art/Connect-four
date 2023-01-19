@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,15 @@ namespace Connect_four
             prevX= 0;
             prevY = 0;
         }
+        public void PieceFall(int j)
+        {
+            if (_pieceDropRect.Y < (100 + (100 * j)))
+                _pieceDropRect.Y += 10;
+        }
+        public bool DidPieceFall()
+        {
+            return _pieceDropRect.Y == (100 + (100 * prevY));
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < 7; i++)
@@ -46,9 +56,7 @@ namespace Connect_four
                         else{
                             spriteBatch.Draw(_piece, _pieceDropRect, Color.White);
                         }
-
-                        if (_pieceDropRect.Y < (100 + (100 * j)))
-                            _pieceDropRect.Y += 10;
+                        PieceFall(j);
                     }
                     else if (_boardPositions[i,j] == 0)
                         spriteBatch.Draw(_piece, new Rectangle((6+ (i*114)),(100 + (j*100)), 100, 100), Color.White);
@@ -90,7 +98,7 @@ namespace Connect_four
                         moved = true;
                         _boardPositions[0,i] = player;
                         prevX = 0; prevY = i;
-                        _pieceDropRect = new Rectangle((6 + (0 * 114)), (100), 100, 100);
+                        _pieceDropRect = new Rectangle((6 + (0 * 114)), (80), 100, 100);
                     }
                 }
             }
@@ -101,7 +109,7 @@ namespace Connect_four
                         moved = true;
                         _boardPositions[1, i] = player;
                         prevX = 1; prevY = i;
-                        _pieceDropRect = new Rectangle((6 + (1 * 114)), (100), 100, 100);
+                        _pieceDropRect = new Rectangle((6 + (1 * 114)), (80), 100, 100);
                     }
                 }
             }
@@ -112,7 +120,7 @@ namespace Connect_four
                         moved = true;
                         _boardPositions[2, i] = player;
                         prevX = 2; prevY = i;
-                        _pieceDropRect = new Rectangle((6 + (2 * 114)), (100), 100, 100);
+                        _pieceDropRect = new Rectangle((6 + (2 * 114)), (80), 100, 100);
                     }
                 }
             }
@@ -123,7 +131,7 @@ namespace Connect_four
                         moved = true;
                         _boardPositions[3, i] = player;
                         prevX = 3; prevY = i;
-                        _pieceDropRect = new Rectangle((6 + (3 * 114)), (100), 100, 100);
+                        _pieceDropRect = new Rectangle((6 + (3 * 114)), (80), 100, 100);
                     }
                 }
             }
@@ -134,7 +142,7 @@ namespace Connect_four
                         moved = true;
                         _boardPositions[4, i] = player;
                         prevX = 4; prevY = i;
-                        _pieceDropRect = new Rectangle((6 + (4 * 114)), (100), 100, 100);
+                        _pieceDropRect = new Rectangle((6 + (4 * 114)), (80), 100, 100);
                     }
                 }
             }
@@ -145,7 +153,7 @@ namespace Connect_four
                         moved = true;
                         _boardPositions[5, i] = player;
                         prevX = 5; prevY = i;
-                        _pieceDropRect = new Rectangle((6 + (5 * 114)), (100), 100, 100);
+                        _pieceDropRect = new Rectangle((6 + (5 * 114)), (80), 100, 100);
                     }
                 }
             }
@@ -156,7 +164,7 @@ namespace Connect_four
                         moved = true;
                         _boardPositions[6, i] = player;
                         prevX = 6; prevY = i;
-                        _pieceDropRect = new Rectangle((6 + (6 * 114)), (100), 100, 100);
+                        _pieceDropRect = new Rectangle((6 + (6 * 114)), (80), 100, 100);
                     }
                 }
             }
