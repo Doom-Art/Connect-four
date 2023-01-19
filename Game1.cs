@@ -58,6 +58,7 @@ namespace Connect_four
         Button loadButton;
         SoundEffectInstance player1WonInstance;
         SoundEffectInstance player2WonInstance;
+        List<Color> pieceColors;
 
         //Pacman variables:
         List<Barrier> barriers;
@@ -123,6 +124,20 @@ namespace Connect_four
             buildingTextures = new List<Texture2D>();
             shogiPieceTextures = new List<Texture2D>();
             buttonTextures = new List<Texture2D>();
+            pieceColors = new List<Color>();
+
+            pieceColors.Add(Color.Red);
+            pieceColors.Add(Color.Green);
+            pieceColors.Add(Color.Blue);
+            //pieceColors.Add(Color.Black);
+            pieceColors.Add(Color.HotPink);
+            pieceColors.Add(Color.MediumVioletRed);
+            pieceColors.Add(Color.Purple);
+            pieceColors.Add(Color.Tomato);
+            pieceColors.Add(Color.LightSeaGreen);
+            pieceColors.Add(Color.Chartreuse);
+            pieceColors.Add(Color.Gray);
+            pieceColors.Add(Color.Fuchsia);
 
             base.Initialize();
             closeButton = new Button(buttonTextures[0], new Rectangle(740, 20, 50, 50));
@@ -231,6 +246,7 @@ namespace Connect_four
                         IsMouseVisible = false;
                         board.Reset();
                         this.Window.Title = "Connect 4";
+                        board.ColorsSet(pieceColors, rand);
                     }
                     else if (pacPlayRect.Contains(mouseState.X, mouseState.Y)){
                         this.Window.Title = "Pacman";
@@ -504,6 +520,7 @@ namespace Connect_four
                     gameWon = false;
                     board.Reset();
                     this.Window.Title = "Connect 4";
+                    board.ColorsSet(pieceColors, rand);
                 }
             }
             else if(screen == Screen.Connect4Help){
@@ -600,29 +617,29 @@ namespace Connect_four
                 if (mouseState.Y > 100){
                     if (playerTurn == 1){
                         _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 40, mouseState.Y - 40, 75, 75), Color.Blue);
-                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), Color.Red);
+                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), board.P1Color());
                     }
                     else if (playerTurn == 2){
                         _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 40, mouseState.Y - 40, 75, 75), Color.White);
-                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), Color.Black);
+                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), board.P2Color());
                     }
                 }
                 if (!gameWon){
                     saveButton.Draw(_spriteBatch);
                     loadButton.Draw(_spriteBatch);
                     if (playerTurn == 1)
-                        _spriteBatch.DrawString(font, "Player 1's Turn", new Vector2(0, 10), Color.Red);
+                        _spriteBatch.DrawString(font, "Player 1's Turn", new Vector2(0, 10), board.P1Color());
                     else if (playerTurn == 2)
-                        _spriteBatch.DrawString(font, "Player 2's Turn", new Vector2(0, 10), Color.Black);
+                        _spriteBatch.DrawString(font, "Player 2's Turn", new Vector2(0, 10), board.P2Color());
                 }
                 else{
                     if (winner == 1){
                         _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(102, 7), Color.Gold);
-                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(105, 10), Color.Red);
+                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(105, 10), board.P1Color());
                     }
                     else if (winner == 2){
                         _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(102, 7), Color.Gold);
-                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(105, 10), Color.Black);
+                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(105, 10), board.P2Color());
                     }
                     else if (winner == -1)
                         _spriteBatch.DrawString(font, "No one wins", new Vector2(130, 10), Color.Turquoise);

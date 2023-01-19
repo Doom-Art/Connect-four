@@ -19,6 +19,8 @@ namespace Connect_four
         public static Random rand = new Random();
         private int prevX; int prevY;
         private Rectangle _pieceDropRect;
+        private Color p1Color;
+        private Color p2Color;
 
         public Board(Texture2D board, Texture2D piece)
         {
@@ -27,11 +29,42 @@ namespace Connect_four
             _boardPositions = new int[7, 6];
             prevX= 0;
             prevY = 0;
+            p1Color = Color.ForestGreen;
+            p2Color = Color.DarkOrange;
         }
         public void PieceFall(int j)
         {
             if (_pieceDropRect.Y < (100 + (100 * j)))
                 _pieceDropRect.Y += 10;
+        }
+        public void ColorsSet(List<Color> colors, Random rand)
+        {
+            this.p1Color = colors[rand.Next(0, colors.Count)];
+            this.p2Color = colors[rand.Next(0, colors.Count)];
+            while (p2Color == p1Color){
+                this.p2Color = colors[rand.Next(0, colors.Count)];
+            }
+        }
+        public void ColorsSet(Color color1, Color color2)
+        {
+            this.p1Color = color1;
+            this.p2Color = color2;
+        }
+        public void P1Color(Color color)
+        {
+            this.p1Color = color;
+        }
+        public void P2Color(Color color)
+        {
+            this.p2Color = color;
+        }
+        public Color P1Color()
+        {
+            return this.p1Color;
+        }
+        public Color P2Color()
+        {
+            return this.p2Color;
         }
         public bool DidPieceFall()
         {
@@ -45,10 +78,10 @@ namespace Connect_four
                 {
                     if (i == prevX && j == prevY){
                         if (_boardPositions[i,j] == 2){
-                            spriteBatch.Draw(_piece, _pieceDropRect, Color.Black);
+                            spriteBatch.Draw(_piece, _pieceDropRect, p2Color);
                         }
                         else if (_boardPositions[i, j] == 1){
-                            spriteBatch.Draw(_piece, _pieceDropRect, Color.Red);
+                            spriteBatch.Draw(_piece, _pieceDropRect, p1Color);
                         }
                         else if (_boardPositions[i,j] == 3){
                             spriteBatch.Draw(_piece, _pieceDropRect, Color.Yellow);
@@ -61,9 +94,9 @@ namespace Connect_four
                     else if (_boardPositions[i,j] == 0)
                         spriteBatch.Draw(_piece, new Rectangle((6+ (i*114)),(100 + (j*100)), 100, 100), Color.White);
                     else if (_boardPositions[i, j] == 1)
-                        spriteBatch.Draw(_piece, new Rectangle((6 + (i * 114)), (100 + (j * 100)), 100, 100), Color.Red);
+                        spriteBatch.Draw(_piece, new Rectangle((6 + (i * 114)), (100 + (j * 100)), 100, 100), p1Color);
                     else if (_boardPositions[i, j] == 2)
-                        spriteBatch.Draw(_piece, new Rectangle((6 + (i * 114)), (100 + (j * 100)), 100, 100), Color.Black);
+                        spriteBatch.Draw(_piece, new Rectangle((6 + (i * 114)), (100 + (j * 100)), 100, 100), p2Color);
                     else if (_boardPositions[i, j] == 3)
                         spriteBatch.Draw(_piece, new Rectangle((6 + (i * 114)), (100 + (j * 100)), 100, 100), Color.Yellow);
                 }
