@@ -103,7 +103,7 @@ namespace Connect_four
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
             //
-            //screen = Screen.Shogi;
+            screen = Screen.Shogi;
             playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
@@ -253,12 +253,16 @@ namespace Connect_four
                 }
             }
             else if(screen == Screen.Shogi){
-                if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
+                if (!gameWon && mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                     if (shogiBoard.MouseClicked(mouseState, playerTurn)){
                         if (playerTurn == 1)
                             playerTurn = 2;
                         else
                             playerTurn = 1;
+                    }
+                    if (shogiBoard.DoublePawn(playerTurn)){
+                        gameWon = true;
+                        winner = playerTurn;
                     }
                 }
             }
@@ -526,6 +530,19 @@ namespace Connect_four
             {
                 GraphicsDevice.Clear(Color.DarkGray);
                 shogiBoard.Draw(_spriteBatch);
+                if (gameWon)
+                {
+                    if (winner == 1)
+                    {
+                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(102, 7), Color.Gold);
+                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(105, 10), Color.Red);
+                    }
+                    else if (winner == 2)
+                    {
+                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(102, 7), Color.Gold);
+                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(105, 10), Color.Black);
+                    }
+                }
             }
             else if(screen == Screen.BuildingJumper)
             {
@@ -623,7 +640,7 @@ namespace Connect_four
             _spriteBatch.End();
             base.Draw(gameTime);
         }
-        public string LetterType(KeyboardState keyboard, KeyboardState prevKeyboard)
+        public string LetterTyped(KeyboardState keyboard, KeyboardState prevKeyboard)
         {
             string c = "";
             if (keyboard.IsKeyDown(Keys.A) && prevKeyboard.IsKeyUp(Keys.A))

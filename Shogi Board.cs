@@ -230,6 +230,26 @@ namespace Connect_four
             }
             return moved;
         }
+        public bool DoublePawn(int playerTurn)
+        {
+            bool doublePawn = false;
+            for (int i=0; i < 9; i++)
+            {
+                bool temp = false;
+                for (int j = 0; j < 9; j++)
+                {
+                    if (_pieces[i,j] != null){
+                        if (_pieces[i, j].Player() != playerTurn && _pieces[i, j].PieceType() == 1 && !_pieces[i, j].Promoted()){
+                            if (temp)
+                                doublePawn = true;
+                            else
+                                temp = true;
+                        }
+                    }
+                }
+            }
+            return doublePawn;
+        }
         
     }
 }
