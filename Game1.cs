@@ -104,7 +104,7 @@ namespace Connect_four
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
             //
-            //screen = Screen.Shogi;
+            screen = Screen.Shogi;
             playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
@@ -271,6 +271,10 @@ namespace Connect_four
             else if(screen == Screen.Shogi){
                 if (!gameWon && mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                     if (shogiBoard.MouseClicked(mouseState, playerTurn)){
+                        if (shogiBoard.GameWon()){
+                            gameWon = true;
+                            winner = playerTurn;
+                        }
                         if (playerTurn == 1)
                             playerTurn = 2;
                         else
@@ -280,6 +284,7 @@ namespace Connect_four
                         gameWon = true;
                         winner = playerTurn;
                     }
+                    
                 }
             }
             else if (screen == Screen.BuildingJumper){

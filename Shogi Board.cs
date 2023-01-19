@@ -28,11 +28,13 @@ namespace Connect_four
         private bool _isPieceClicked;
         private int _pieceX; private int _pieceY;
         private int _dropPieceType;
+        private bool _gameWon;
 
         public Shogi_Board(List<Texture2D> textures, SpriteFont font)
         {
             this._rectTexture = textures[0];
             _isPieceClicked = false;
+            _gameWon = false;
             //Benches
             p1Bench = new ShogiBench(textures, font, 15, 120, 1);
             p2Bench = new ShogiBench(textures, font, 725, 120, 2);
@@ -135,7 +137,10 @@ namespace Connect_four
                                             _pieces[_pieceX, _pieceY].Promote();
                                     }
                                     if (_pieces[i, j] != null){
-                                        if (playerTurn == 1){
+                                        if (_pieces[i,j].PieceType() == 8){
+                                            _gameWon = true;
+                                        }
+                                        else if (playerTurn == 1){
                                             p1Bench.AddPiece(_pieces[i, j].PieceType());
                                         }
                                         else{
@@ -230,6 +235,10 @@ namespace Connect_four
             }
             return moved;
         }
+        public bool GameWon()
+        {
+            return _gameWon;
+        }
         public bool DoublePawn(int playerTurn)
         {
             bool doublePawn = false;
@@ -241,7 +250,7 @@ namespace Connect_four
                     if (_pieces[i,j] != null){
                         if (_pieces[i, j].Player() != playerTurn && _pieces[i, j].PieceType() == 1 && !_pieces[i, j].Promoted()){
                             if (temp)
-                                doublePawn = true;
+                                doublePawn= true;
                             else
                                 temp = true;
                         }

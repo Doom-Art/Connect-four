@@ -77,6 +77,10 @@ namespace Connect_four
             else 
                 _player = 1;
         }
+        /// <summary>
+        /// returns the type of piece it is: pawn = 1, lance = 2, knight = 3, silver general = 4, gold general = 5, bishop = 6, rook = 7, king = 8
+        /// </summary>
+        /// <returns></returns>
         public int PieceType()
         {
             return _pieceType;
