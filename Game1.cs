@@ -103,7 +103,7 @@ namespace Connect_four
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
             //
-            screen = Screen.Shogi;
+            //screen = Screen.Shogi;
             playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
@@ -660,41 +660,41 @@ namespace Connect_four
             else if (keyboard.IsKeyDown(Keys.H) && prevKeyboard.IsKeyUp(Keys.H))
                 c += 'H';
             else if (keyboard.IsKeyDown(Keys.I) && prevKeyboard.IsKeyUp(Keys.I))
-                c += 'A';
+                c += 'I';
             else if (keyboard.IsKeyDown(Keys.J) && prevKeyboard.IsKeyUp(Keys.J))
-                c += 'A';
+                c += 'J';
             else if (keyboard.IsKeyDown(Keys.K) && prevKeyboard.IsKeyUp(Keys.K))
-                c += 'A';
+                c += 'K';
             else if (keyboard.IsKeyDown(Keys.L) && prevKeyboard.IsKeyUp(Keys.L))
-                c += 'A';
+                c += 'L';
             else if (keyboard.IsKeyDown(Keys.M) && prevKeyboard.IsKeyUp(Keys.M))
-                c += 'A';
+                c += 'M';
             else if (keyboard.IsKeyDown(Keys.N) && prevKeyboard.IsKeyUp(Keys.N))
-                c += 'A';
+                c += 'N';
             else if (keyboard.IsKeyDown(Keys.O) && prevKeyboard.IsKeyUp(Keys.O))
-                c += 'A';
+                c += 'O';
             else if (keyboard.IsKeyDown(Keys.P) && prevKeyboard.IsKeyUp(Keys.P))
-                c += 'A';
+                c += 'P';
             else if (keyboard.IsKeyDown(Keys.Q) && prevKeyboard.IsKeyUp(Keys.Q))
-                c += 'A';
+                c += 'Q';
             else if (keyboard.IsKeyDown(Keys.R) && prevKeyboard.IsKeyUp(Keys.R))
-                c += 'A';
+                c += 'R';
             else if (keyboard.IsKeyDown(Keys.S) && prevKeyboard.IsKeyUp(Keys.S))
-                c += 'A';
+                c += 'S';
             else if (keyboard.IsKeyDown(Keys.T) && prevKeyboard.IsKeyUp(Keys.T))
-                c += 'A';
+                c += 'T';
             else if (keyboard.IsKeyDown(Keys.U) && prevKeyboard.IsKeyUp(Keys.U))
-                c += 'A';
+                c += 'U';
             else if (keyboard.IsKeyDown(Keys.V) && prevKeyboard.IsKeyUp(Keys.V))
-                c += 'A';
+                c += 'V';
             else if (keyboard.IsKeyDown(Keys.W) && prevKeyboard.IsKeyUp(Keys.W))
-                c += 'A';
+                c += 'W';
             else if (keyboard.IsKeyDown(Keys.X) && prevKeyboard.IsKeyUp(Keys.X))
-                c += 'A';
+                c += 'X';
             else if (keyboard.IsKeyDown(Keys.Y) && prevKeyboard.IsKeyUp(Keys.Y))
-                c += 'A';
+                c += 'Y';
             else if (keyboard.IsKeyDown(Keys.Z) && prevKeyboard.IsKeyUp(Keys.Z))
-                c += 'A';
+                c += 'Z';
             return c;
         }
     }
