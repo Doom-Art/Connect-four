@@ -112,20 +112,17 @@ namespace Connect_four
         {
             if (i +1 == xTake){
                 _piecePositions[xTake, yTake] = null;
-                xTake = -1;
             }
             else if(i-1 == xTake){
                 _piecePositions[xTake, yTake] = null;
-                xTake = -1;
             }
             else if(j+1 == yTake){
                 _piecePositions[xTake, yTake] = null;
-                xTake = -1;
             }
             else if(j-1 == yTake){
                 _piecePositions[xTake, yTake] = null;
-                xTake = -1;
             }
+            xTake = -1;
         }
         public bool MouseClicked(MouseState mouse, int playerTurn)
         {
