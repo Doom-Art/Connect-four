@@ -129,7 +129,7 @@ namespace Connect_four
             pieceColors.Add(Color.Red);
             pieceColors.Add(Color.Green);
             pieceColors.Add(Color.Blue);
-            //pieceColors.Add(Color.Black);
+            pieceColors.Add(Color.Black);
             pieceColors.Add(Color.HotPink);
             pieceColors.Add(Color.MediumVioletRed);
             pieceColors.Add(Color.Purple);

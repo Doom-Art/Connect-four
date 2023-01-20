@@ -109,6 +109,190 @@ namespace Connect_four
                 for (int j = 0; j < 9; j++)
                     _boardPositions[i, j] = 0;
         }
+        public void CheckMate(int playerTurn)
+        {
+            int check = -1;
+            bool checkmate = false;
+            for (int p = 1; p <=2; p++)
+            {
+                for (int i = 0; i < 9; i++)
+                    for (int j = 0; j < 9; j++)
+                    {
+                        if (_pieces[i,j] != null)
+                        {
+                            if (_pieces[i,j].Player() != p)
+                            {
+                                if (_pieces[i, j].PieceType() == 1)
+                                {
+                                    if (_pieces[i, j].Player() == 1)
+                                    {
+                                        if (i > 0)
+                                        {
+                                            if (_pieces[i, j - 1] != null)
+                                            {
+                                                if (_pieces[i, j - 1].Player() != 1 && _pieces[i, j - 1].PieceType() == 8)
+                                                {
+                                                    check = p;
+                                                }
+                                            }
+                                        }
+                                        if (i +1 < 9)
+                                        {
+                                            if (_pieces[i, j + 1] != null)
+                                            {
+                                                if (_pieces[i, j + 1].Player() != 1 && _pieces[i, j + 1].PieceType() == 8)
+                                                {
+                                                    check = p;
+                                                }
+                                            }
+                                        }
+                                        if (i - 1 >= 0 && j - 1 >= 0)
+                                        {
+                                            if (_pieces[i - 1, j - 1] != null)
+                                            {
+                                                if (_pieces[i - 1, j - 1].Player() != playerTurn && _pieces[i - 1, j - 1].PieceType() == 8)
+                                                {
+                                                    check = p;
+                                                }
+                                            }
+
+                                        }//Up Left Diagonal
+                                        if (i + 1 < 9 && j - 1 >= 0)
+                                        {
+                                            if (_pieces[i + 1, j - 1] != null)
+                                            {
+                                                if (_pieces[i + 1, j - 1].Player() != playerTurn && _pieces[i+1,j-1].PieceType() == 8)
+                                                {
+                                                    check = p;
+                                                }
+                                            }
+                                            
+                                        }// Up Right Diagonal
+                                        /*
+                                         * if (X - 1 >= 0)
+                                        {
+                                            if (pieces[X - 1, Y] != null)
+                                            {
+                                                if (pieces[X - 1, Y].Player() != playerTurn)
+                                                {
+                                                    board[X - 1, Y] = -1;
+                                                }
+                                            }
+                                            else
+                                                board[X - 1, Y] = -1;
+                                        }//Left One
+                                        if (X + 1 < 9)
+                                        {
+                                            if (pieces[X + 1, Y] != null)
+                                            {
+                                                if (pieces[X + 1, Y].Player() != playerTurn)
+                                                {
+                                                    board[X + 1, Y] = -1;
+                                                }
+                                            }
+                                            else
+                                                board[X + 1, Y] = -1;
+                                        }//Right One
+                                    }
+                                    else
+                                    {
+                                        if (!pieces[X, Y].Promoted())
+                                        {
+                                            if (pieces[X, Y + 1] != null)
+                                            {
+                                                if (pieces[X, Y + 1].Player() != 2)
+                                                {
+                                                    board[X, Y + 1] = -1;
+                                                }
+                                            }
+                                            else
+                                                board[X, Y + 1] = -1;
+                                        }
+                                        else
+                                        {
+                                            if (Y - 1 >= 0)
+                                            {
+                                                if (pieces[X, Y - 1] != null)
+                                                {
+                                                    if (pieces[X, Y - 1].Player() != playerTurn)
+                                                    {
+                                                        board[X, Y - 1] = -1;
+                                                    }
+                                                }
+                                                else
+                                                    board[X, Y - 1] = -1;
+                                            }//Up One
+                                            if (Y + 1 < 9)
+                                            {
+                                                if (pieces[X, Y + 1] != null)
+                                                {
+                                                    if (pieces[X, Y + 1].Player() != playerTurn)
+                                                    {
+                                                        board[X, Y + 1] = -1;
+                                                    }
+                                                }
+                                                else
+                                                    board[X, Y + 1] = -1;
+                                            }//Down One    
+                                            if (X - 1 >= 0)
+                                            {
+                                                if (pieces[X - 1, Y] != null)
+                                                {
+                                                    if (pieces[X - 1, Y].Player() != playerTurn)
+                                                    {
+                                                        board[X - 1, Y] = -1;
+                                                    }
+                                                }
+                                                else
+                                                    board[X - 1, Y] = -1;
+                                            }//Left One
+                                            if (X + 1 < 9)
+                                            {
+                                                if (pieces[X + 1, Y] != null)
+                                                {
+                                                    if (pieces[X + 1, Y].Player() != playerTurn)
+                                                    {
+                                                        board[X + 1, Y] = -1;
+                                                    }
+                                                }
+                                                else
+                                                    board[X + 1, Y] = -1;
+                                            }//Right One
+                                            if (X - 1 >= 0 && Y + 1 < 9)
+                                            {
+                                                if (pieces[X - 1, Y + 1] != null)
+                                                {
+                                                    if (pieces[X - 1, Y + 1].Player() != playerTurn)
+                                                    {
+                                                        board[X - 1, Y + 1] = -1;
+                                                    }
+                                                }
+                                                else
+                                                    board[X - 1, Y + 1] = -1;
+                                            }//Down Left Diagonal
+                                            if (X + 1 < 9 && Y + 1 < 9)
+                                            {
+                                                if (pieces[X + 1, Y + 1] != null)
+                                                {
+                                                    if (pieces[X + 1, Y + 1].Player() != playerTurn)
+                                                    {
+                                                        board[X + 1, Y + 1] = -1;
+                                                    }
+                                                }
+                                                else
+                                                    board[X + 1, Y + 1] = -1;
+                                            }//Down Right Diagonal
+                                        }//Promo
+                                         * 
+                                         */
+                                    }
+                                }//Pawn Movement
+                            }
+                        }
+                    }
+            }
+
+        }
         
         public bool MouseClicked(MouseState mouse, int playerTurn)
         {
