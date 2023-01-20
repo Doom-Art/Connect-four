@@ -33,7 +33,8 @@ namespace Connect_four
             Pacman,
             PacmanInstructions,
             BuildingJumper,
-            Shogi
+            Shogi,
+            Checkers
         }
         Screen screen;
 
@@ -91,6 +92,9 @@ namespace Connect_four
         List<Texture2D> shogiPieceTextures;
         Shogi_Board shogiBoard;
 
+        //Checkers
+        CheckersBoard checkerBoard;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -105,6 +109,7 @@ namespace Connect_four
             screen = Screen.Menu;
             //
             //screen = Screen.Shogi;
+            screen = Screen.Checkers;
             playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
@@ -150,6 +155,9 @@ namespace Connect_four
             Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
             rabbitJumper = new Jumper(rabbitTex, _graphics);
             shogiBoard = new Shogi_Board(shogiPieceTextures, smallFont);
+
+            ///////////////////////////////////////////////////////////////////OVER HERE//////////////////////////////////////
+            checkerBoard = new CheckersBoard(shogiPieceTextures[0], circleTex, circleTex);
 
         }
 
@@ -285,6 +293,20 @@ namespace Connect_four
                         winner = playerTurn;
                     }
                     
+                }
+            }
+            else if(screen == Screen.Checkers){
+                if (!gameWon && mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
+                {
+                    this.Window.Title = $"p: {playerTurn} gw{gameWon} mclick{mouseState.LeftButton == ButtonState.Pressed}";
+                    if (checkerBoard.MouseClicked(mouseState, playerTurn))
+                    {
+                        if (playerTurn == 1)
+                            playerTurn = 2;
+                        else
+                            playerTurn = 1;
+                    }
+
                 }
             }
             else if (screen == Screen.BuildingJumper){
@@ -565,6 +587,11 @@ namespace Connect_four
                         _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(105, 10), Color.Black);
                     }
                 }
+            }
+            else if(screen == Screen.Checkers)
+            {
+                GraphicsDevice.Clear(Color.DarkGray);
+                checkerBoard.Draw(_spriteBatch);
             }
             else if(screen == Screen.BuildingJumper)
             {
