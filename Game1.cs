@@ -104,7 +104,7 @@ namespace Connect_four
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
             //
-            screen = Screen.Shogi;
+            //screen = Screen.Shogi;
             playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
