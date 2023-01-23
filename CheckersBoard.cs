@@ -124,6 +124,12 @@ namespace Connect_four
             }
             xTake = -1;
         }
+        public bool CanMove(int playerTurn)
+        {
+            bool move = false;
+            ///////////////////////////////////WIP
+            return move;
+        }
         public bool MouseClicked(MouseState mouse, int playerTurn)
         {
             bool moved = false;
