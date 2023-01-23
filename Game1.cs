@@ -23,8 +23,10 @@ namespace Connect_four
         float startTime;
         SpriteFont font;
         SpriteFont smallFont;
+        SpriteFont mediumFont;
         SoundEffectInstance gameOverInstance;
         Random rand;
+        Texture2D easterEgg;
         enum Screen
         {
             Menu,
@@ -34,7 +36,10 @@ namespace Connect_four
             PacmanInstructions,
             BuildingJumper,
             Shogi,
-            Checkers
+            Checkers,
+            ShogiInstructions,
+            CheckersInstructions,
+            HunterWilsonEasterEgg
         }
         Screen screen;
 
@@ -109,7 +114,7 @@ namespace Connect_four
             screen = Screen.Menu;
             //
             //screen = Screen.Shogi;
-            screen = Screen.Checkers;
+            //screen = Screen.Checkers;
             playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
@@ -136,7 +141,6 @@ namespace Connect_four
             pieceColors.Add(Color.Blue);
             pieceColors.Add(Color.Black);
             pieceColors.Add(Color.HotPink);
-            pieceColors.Add(Color.MediumVioletRed);
             pieceColors.Add(Color.Purple);
             pieceColors.Add(Color.Tomato);
             pieceColors.Add(Color.LightSeaGreen);
@@ -155,8 +159,6 @@ namespace Connect_four
             Ghost.GenerateGhosts(ghosts, ghostLeft, ghostRight);
             rabbitJumper = new Jumper(rabbitTex, _graphics);
             shogiBoard = new Shogi_Board(shogiPieceTextures, smallFont);
-
-            ///////////////////////////////////////////////////////////////////OVER HERE//////////////////////////////////////
             checkerBoard = new CheckersBoard(shogiPieceTextures[0], circleTex, circleTex);
 
         }
@@ -167,11 +169,13 @@ namespace Connect_four
 
             font = Content.Load<SpriteFont>("MilkyHoney");
             smallFont = Content.Load<SpriteFont>("Small Font");
+            mediumFont = Content.Load<SpriteFont>("MedFont");
             gameOverInstance = Content.Load<SoundEffect>("game_over").CreateInstance();
             gameWonInstance = Content.Load<SoundEffect>("goodJobPac").CreateInstance();
             player1WonInstance= Content.Load<SoundEffect>("Player1W").CreateInstance();
             player2WonInstance = Content.Load<SoundEffect>("Player2W").CreateInstance();
             coinSound = Content.Load<SoundEffect>("ding");
+            easterEgg = Content.Load<Texture2D>("Hunter");
 
             buttonTextures.Add(Content.Load<Texture2D>("close_box_red"));
             buttonTextures.Add(Content.Load<Texture2D>("questionIcon"));
@@ -246,7 +250,11 @@ namespace Connect_four
                 Exit();
             if (screen == Screen.Menu){
                 if(mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
-                    if (c4Rect.Contains(mouseState.X, mouseState.Y)){
+                    if(rand.Next(10) == 0)
+                    {
+                        screen = Screen.HunterWilsonEasterEgg;
+                    }
+                    else if (c4Rect.Contains(mouseState.X, mouseState.Y)){
                         screen = Screen.Connect4;
                         winner = 0;
                         playerTurn = 1;
@@ -557,6 +565,14 @@ namespace Connect_four
                     this.Window.Title = "Connect 4";
                 }
             }
+            else if(screen == Screen.HunterWilsonEasterEgg)
+            {
+                this.Window.Title = "Welcome To The Hunter Easter Egg, Press C to Close";
+                if (keyboardState.IsKeyDown(Keys.C)){
+                    screen = Screen.Menu;
+                    this.Window.Title = "Mini Arcade Menu";
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -648,12 +664,12 @@ namespace Connect_four
                 //Below code is for drawing the game piece when the mouse is on the board
                 if (mouseState.Y > 100){
                     if (playerTurn == 1){
-                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 40, mouseState.Y - 40, 75, 75), Color.Blue);
-                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), board.P1Color());
+                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 40, mouseState.Y - 40, 75, 75), Color.White * 0.5f);
+                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), board.P1Color()* 0.7f);
                     }
                     else if (playerTurn == 2){
-                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 40, mouseState.Y - 40, 75, 75), Color.White);
-                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), board.P2Color());
+                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 40, mouseState.Y - 40, 75, 75), Color.White * 0.5f);
+                        _spriteBatch.Draw(gamePiece, new Rectangle(mouseState.X - 37, mouseState.Y - 37, 75, 75), board.P2Color()*0.7f);
                     }
                 }
                 if (!gameWon){
@@ -684,6 +700,11 @@ namespace Connect_four
                 _spriteBatch.DrawString(font, "Rules", new Vector2(300, 20), Color.Black);
                 _spriteBatch.DrawString(smallFont, "Left Click a column to drop a piece", new Vector2(10, 120), Color.Black);
                 _spriteBatch.DrawString(smallFont, "Players must connect 4 of the same colored discs in a row to win.\nOnly one piece is played at a time.\nPlayers can be on the offensive or defensive.\r\nThe game ends when there is a 4-in-a-row or a stalemate.\r\nPress C or the close button to return to the menu\nPress R to restart the game when it ends", new Vector2(10, 150), Color.Black);
+            }
+            else if(screen == Screen.HunterWilsonEasterEgg)
+            {
+                GraphicsDevice.Clear(Color.Turquoise);
+                _spriteBatch.Draw(easterEgg, new Rectangle(100,50,600,600), Color.White);
             }
             
             _spriteBatch.End();

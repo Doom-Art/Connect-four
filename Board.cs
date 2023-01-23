@@ -3,11 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace Connect_four
 {
@@ -19,7 +22,7 @@ namespace Connect_four
         public static Random rand = new Random();
         private int prevX; int prevY;
         private Rectangle _pieceDropRect;
-        private Color p1Color;
+        private Color p1Color; private int p1ColorNum;
         private Color p2Color;
 
         public Board(Texture2D board, Texture2D piece)
@@ -270,6 +273,8 @@ namespace Connect_four
         {
             string temp;
             writer.WriteLine(playerTurn);
+            writer.WriteLine((p1Color));
+            writer.WriteLine((p2Color));
             for (int j = 0; j<6; j++)
             {
                 temp = "";
@@ -284,13 +289,21 @@ namespace Connect_four
         {
             int playerTurn = 0;
             int j = 0;
-            bool tempTrue = true;
+            int lineNum = 0;
             foreach (string line in File.ReadLines(@txtFileName))
             {
-                if (tempTrue)
+                if (lineNum == 0)
                 {
                     Int32.TryParse(line, out playerTurn);
-                    tempTrue = false;
+                    lineNum++;
+                }
+                else if(lineNum == 1)
+                {
+                    lineNum++;
+                }
+                else if(lineNum == 2)
+                {
+                    lineNum++;
                 }
                 else{
                     for (int i = 0; i < 7; i++)
