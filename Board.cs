@@ -23,7 +23,7 @@ namespace Connect_four
         private int prevX; int prevY;
         private Rectangle _pieceDropRect;
         private Color p1Color; private int p1ColorNum;
-        private Color p2Color;
+        private Color p2Color; private int p2ColorNum;
 
         public Board(Texture2D board, Texture2D piece)
         {
@@ -42,11 +42,15 @@ namespace Connect_four
         }
         public void ColorsSet(List<Color> colors, Random rand)
         {
-            this.p1Color = colors[rand.Next(0, colors.Count)];
-            this.p2Color = colors[rand.Next(0, colors.Count)];
-            while (p2Color == p1Color){
-                this.p2Color = colors[rand.Next(0, colors.Count)];
+            p1ColorNum = rand.Next(0, colors.Count);
+            p2ColorNum = rand.Next(0, colors.Count);
+            while (p2ColorNum == p1ColorNum)
+            {
+                p2ColorNum = rand.Next(0, colors.Count);
             }
+            this.p1Color = colors[p1ColorNum];
+            this.p2Color = colors[p2ColorNum];
+            
         }
         public void ColorsSet(Color color1, Color color2)
         {
@@ -273,8 +277,8 @@ namespace Connect_four
         {
             string temp;
             writer.WriteLine(playerTurn);
-            writer.WriteLine((p1Color));
-            writer.WriteLine((p2Color));
+            writer.WriteLine((p1ColorNum));
+            writer.WriteLine((p2ColorNum));
             for (int j = 0; j<6; j++)
             {
                 temp = "";
@@ -285,11 +289,12 @@ namespace Connect_four
                 writer.WriteLine(temp);
             }
         }
-        public int LoadGame(string txtFileName)
+        public int LoadGame(string txtFileName, List<Color> colors)
         {
             int playerTurn = 0;
             int j = 0;
             int lineNum = 0;
+            prevX = -1;
             foreach (string line in File.ReadLines(@txtFileName))
             {
                 if (lineNum == 0)
@@ -299,10 +304,12 @@ namespace Connect_four
                 }
                 else if(lineNum == 1)
                 {
+                    p1Color = colors[Convert.ToInt32(line)];
                     lineNum++;
                 }
                 else if(lineNum == 2)
                 {
+                    p2Color = colors[Convert.ToInt32(line)];
                     lineNum++;
                 }
                 else{

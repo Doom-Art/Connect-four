@@ -506,7 +506,7 @@ namespace Connect_four
                     }
                     else if (!gameWon && loadButton.Clicked(mouseState)){
                         if (File.Exists("saved.txt")){
-                            playerTurn = board.LoadGame("saved.txt");
+                            playerTurn = board.LoadGame("saved.txt", pieceColors);
                         }
                     }
                     else if (!gameWon && seconds > .8){
