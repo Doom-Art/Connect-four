@@ -765,6 +765,8 @@ namespace Connect_four
                 c += 'Y';
             else if (keyboard.IsKeyDown(Keys.Z) && prevKeyboard.IsKeyUp(Keys.Z))
                 c += 'Z';
+            else if (keyboard.IsKeyDown(Keys.Delete) && prevKeyboard.IsKeyUp(Keys.Delete))
+                c.Remove(c.Length - 1);
             return c;
         }
     }

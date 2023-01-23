@@ -17,11 +17,13 @@ namespace Connect_four
         private bool _isPieceClicked;
         private int _selectedX, _selectedY;
         private int xTake, yTake;
+        private List<int> _piecesToTake;
         public CheckersBoard(Texture2D rect, Texture2D checkersPiece, Texture2D checkersKing)
         {
             _rectangleTex= rect;
             _boardPositions = new int[8, 8];
             _piecePositions = new CheckerPiece[8, 8];
+            _piecesToTake = new List<int>();
             _isPieceClicked = false;
             ResetGame(checkersPiece, checkersKing);
             xTake = -1;
@@ -110,19 +112,27 @@ namespace Connect_four
         }
         public void Jump(int i, int j)
         {
-            if (i +1 == xTake){
-                _piecePositions[xTake, yTake] = null;
-            }
-            else if(i-1 == xTake){
-                _piecePositions[xTake, yTake] = null;
-            }
-            else if(j+1 == yTake){
-                _piecePositions[xTake, yTake] = null;
-            }
-            else if(j-1 == yTake){
-                _piecePositions[xTake, yTake] = null;
+            for (int k = 0; k < _piecesToTake.Count; k += 2)
+            {
+                if (i + 1 == _piecesToTake[k] && j + 1 == _piecesToTake[k + 1])
+                {
+                    _piecePositions[_piecesToTake[k], _piecesToTake[k + 1]] = null;
+                }
+                else if (i + 1 == _piecesToTake[k] && j - 1 == _piecesToTake[k + 1])
+                {
+                    _piecePositions[_piecesToTake[k], _piecesToTake[k + 1]] = null;
+                }
+                else if (i - 1 == _piecesToTake[k] && j + 1 == _piecesToTake[k + 1])
+                {
+                    _piecePositions[_piecesToTake[k], _piecesToTake[k + 1]] = null;
+                }
+                else if (i - 1 == _piecesToTake[k] && j - 1 == _piecesToTake[k + 1])
+                {
+                    _piecePositions[_piecesToTake[k], _piecesToTake[k + 1]] = null;
+                }
             }
             xTake = -1;
+            _piecesToTake.Clear();
         }
         public bool CanMove(int playerTurn)
         {
@@ -170,39 +180,48 @@ namespace Connect_four
                             if (_piecePositions[i, j] != null){
                                 if (_piecePositions[i, j].Player() == playerTurn){
                                     if (_piecePositions[i, j].IsKing()){
-                                        if (i - 1 >= 0 && j + 1 < 8){
-                                            if (_piecePositions[i - 1, j + 1] == null){
+                                        if (i - 1 >= 0 && j + 1 < 8)
+                                        {
+                                            if (_piecePositions[i - 1, j + 1] == null)
+                                            {
                                                 _boardPositions[i - 1, j + 1] = -1;
                                             }
-                                            else if (i - 1 > 0 && j + 2 < 8){
-                                                if (_piecePositions[i - 2, j + 2] == null && _piecePositions[i-1,j+1].Player() != playerTurn)
+                                            else if (i - 1 > 0 && j + 2 < 8)
+                                            {
+                                                if (_piecePositions[i - 2, j + 2] == null && _piecePositions[i - 1, j + 1].Player() != playerTurn)
                                                 {
-                                                    xTake = i - 1; yTake = j + 1;
-                                                    _boardPositions[i - 2, j + 2] = -1;
+                                                    _piecesToTake.Add(i - 1); _piecesToTake.Add(j + 1);
+                                                    _boardPositions[i - 2, j + 2] = -1; xTake = 0;
                                                 }
                                             }
                                         }
-                                        if (i + 1 < 8 && j + 1 < 8){
-                                            if (_piecePositions[i + 1, j + 1] == null){
+                                        if (i + 1 < 8 && j + 1 < 8)
+                                        {
+                                            if (_piecePositions[i + 1, j + 1] == null)
+                                            {
                                                 _boardPositions[i + 1, j + 1] = -1;
                                             }
-                                            else if (i + 2 < 8 && j + 2 < 8){
+                                            else if (i + 2 < 8 && j + 2 < 8)
+                                            {
                                                 if (_piecePositions[i + 2, j + 2] == null && _piecePositions[i + 1, j + 1].Player() != playerTurn)
                                                 {
-                                                    _boardPositions[i + 2, j + 2] = -1;
-                                                    xTake = i + 1; yTake = j + 1;
+                                                    _boardPositions[i + 2, j + 2] = -1; xTake = 0;
+                                                    _piecesToTake.Add(i + 1); _piecesToTake.Add(j + 1);
                                                 }
                                             }
                                         }
-                                        if (i - 1 >= 0 && j > 0){
-                                            if (_piecePositions[i - 1, j - 1] == null){
+                                        if (i - 1 >= 0 && j > 0)
+                                        {
+                                            if (_piecePositions[i - 1, j - 1] == null)
+                                            {
                                                 _boardPositions[i - 1, j - 1] = -1;
                                             }
-                                            else if (i - 1 > 0 && j - 1 > 0){
+                                            else if (i - 1 > 0 && j - 1 > 0)
+                                            {
                                                 if (_piecePositions[i - 2, j - 2] == null && _piecePositions[i - 1, j - 1].Player() != playerTurn)
                                                 {
-                                                    _boardPositions[i - 2, j - 2] = -1;
-                                                    xTake = i - 1; yTake = j - 1;
+                                                    _boardPositions[i - 2, j - 2] = -1; xTake = 0;
+                                                    _piecesToTake.Add(i - 1); _piecesToTake.Add(j - 1);
                                                 }
                                             }
                                         }
@@ -210,11 +229,12 @@ namespace Connect_four
                                         {
                                             if (_piecePositions[i + 1, j - 1] == null)
                                                 _boardPositions[i + 1, j - 1] = -1;
-                                            else if (i + 2 < 8 && j - 1 > 0){
+                                            else if (i + 2 < 8 && j - 1 > 0)
+                                            {
                                                 if (_piecePositions[i + 2, j - 2] == null && _piecePositions[i + 1, j - 1].Player() != playerTurn)
                                                 {
-                                                    _boardPositions[i + 2, j - 2] = -1;
-                                                    xTake = i + 1; yTake = j - 1;
+                                                    _boardPositions[i + 2, j - 2] = -1; xTake = 0;
+                                                    _piecesToTake.Add(i + 1); _piecesToTake.Add(j - 1);
                                                 }
                                             }
                                         }
@@ -230,8 +250,8 @@ namespace Connect_four
                                             }
                                             else if (i - 1 > 0 && j + 2 < 8){
                                                 if (_piecePositions[i - 2, j + 2] == null && _piecePositions[i - 1, j + 1].Player() != playerTurn){
-                                                    xTake = i - 1; yTake = j + 1;
-                                                    _boardPositions[i - 2, j + 2] = -1;
+                                                    _piecesToTake.Add(i - 1); _piecesToTake.Add(j + 1);
+                                                    _boardPositions[i - 2, j + 2] = -1; xTake = 0;
                                                 }
                                             }
                                         }
@@ -241,8 +261,8 @@ namespace Connect_four
                                             }
                                             else if (i + 2 < 8 && j + 2 < 8){
                                                 if (_piecePositions[i + 2, j + 2] == null && _piecePositions[i + 1, j + 1].Player() != playerTurn){
-                                                    _boardPositions[i + 2, j + 2] = -1;
-                                                    xTake = i + 1; yTake = j + 1;
+                                                    _boardPositions[i + 2, j + 2] = -1; xTake = 0;
+                                                    _piecesToTake.Add(i + 1); _piecesToTake.Add(j + 1);
                                                 }
                                             }
                                         }
@@ -262,8 +282,8 @@ namespace Connect_four
                                             {
                                                 if (_piecePositions[i - 2, j - 2] == null && _piecePositions[i - 1, j - 1].Player() != playerTurn)
                                                 {
-                                                    _boardPositions[i - 2, j - 2] = -1;
-                                                    xTake = i - 1; yTake = j - 1;
+                                                    _boardPositions[i - 2, j - 2] = -1; xTake = 0;
+                                                    _piecesToTake.Add(i - 1); _piecesToTake.Add(j - 1);
                                                 }
                                             }
                                         }
@@ -275,8 +295,8 @@ namespace Connect_four
                                             {
                                                 if (_piecePositions[i + 2, j - 2] == null && _piecePositions[i + 1, j - 1].Player() != playerTurn)
                                                 {
-                                                    _boardPositions[i + 2, j - 2] = -1;
-                                                    xTake = i + 1; yTake = j - 1;
+                                                    _boardPositions[i + 2, j - 2] = -1; xTake = 0;
+                                                    _piecesToTake.Add(i + 1); _piecesToTake.Add(j - 1);
                                                 }
                                             }
                                         }
