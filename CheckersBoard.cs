@@ -110,6 +110,18 @@ namespace Connect_four
                 }
 
         }
+        public bool GameWon(int playerTurn)
+        {
+            bool won = true;
+            for (int i = 0; i <8; i++)
+                for (int j = 0; j<8; j++)
+                {
+                    if (_piecePositions[i, j] != null)
+                        if (_piecePositions[i, j].Player() == playerTurn)
+                            won = false;
+                }
+            return won;
+        }
         public void Jump(int i, int j)
         {
             for (int k = 0; k < _piecesToTake.Count; k += 2)
@@ -137,7 +149,135 @@ namespace Connect_four
         public bool CanMove(int playerTurn)
         {
             bool move = false;
-            ///////////////////////////////////WIP
+            for (int i = 0; i< 8; i++)
+            {
+                for (int j = 0; j<8; j++)
+                {
+                    if (_piecePositions[i,j] != null)
+                    {
+                        if (_piecePositions[i,j].Player() == playerTurn)
+                        {
+                            if (_piecePositions[i, j].IsKing())
+                            {
+                                if (i - 1 >= 0 && j + 1 < 8)
+                                {
+                                    if (_piecePositions[i - 1, j + 1] == null)
+                                    {
+                                        move = true;
+                                    }
+                                    else if (i - 1 > 0 && j + 2 < 8)
+                                    {
+                                        if (_piecePositions[i - 2, j + 2] == null && _piecePositions[i - 1, j + 1].Player() != playerTurn)
+                                        {
+                                            move = true;
+                                        }
+                                    }
+                                }
+                                if (i + 1 < 8 && j + 1 < 8)
+                                {
+                                    if (_piecePositions[i + 1, j + 1] == null)
+                                    {
+                                        move = true;
+                                    }
+                                    else if (i + 2 < 8 && j + 2 < 8)
+                                    {
+                                        if (_piecePositions[i + 2, j + 2] == null && _piecePositions[i + 1, j + 1].Player() != playerTurn)
+                                        {
+                                            move = true;
+                                        }
+                                    }
+                                }
+                                if (i - 1 >= 0 && j > 0)
+                                {
+                                    if (_piecePositions[i - 1, j - 1] == null)
+                                    {
+                                        move = true;
+                                    }
+                                    else if (i - 1 > 0 && j - 1 > 0)
+                                    {
+                                        if (_piecePositions[i - 2, j - 2] == null && _piecePositions[i - 1, j - 1].Player() != playerTurn)
+                                        {
+                                            move = true;
+                                        }
+                                    }
+                                }
+                                if (i + 1 < 8 && j > 0)
+                                {
+                                    if (_piecePositions[i + 1, j - 1] == null)
+                                        move = true;
+                                    else if (i + 2 < 8 && j - 1 > 0)
+                                    {
+                                        if (_piecePositions[i + 2, j - 2] == null && _piecePositions[i + 1, j - 1].Player() != playerTurn)
+                                        {
+                                            move = true;
+                                        }
+                                    }
+                                }
+                            }
+                            else if (playerTurn == 1)
+                            {
+                                if (i - 1 >= 0 && j + 1 < 8)
+                                {
+                                    if (_piecePositions[i - 1, j + 1] == null)
+                                    {
+                                        move = true;
+                                    }
+                                    else if (i - 1 > 0 && j + 2 < 8)
+                                    {
+                                        if (_piecePositions[i - 2, j + 2] == null && _piecePositions[i - 1, j + 1].Player() != playerTurn)
+                                        {
+                                            move = true;
+                                        }
+                                    }
+                                }
+                                if (i + 1 < 8 && j + 1 < 8)
+                                {
+                                    if (_piecePositions[i + 1, j + 1] == null)
+                                    {
+                                        move = true;
+                                    }
+                                    else if (i + 2 < 8 && j + 2 < 8)
+                                    {
+                                        if (_piecePositions[i + 2, j + 2] == null && _piecePositions[i + 1, j + 1].Player() != playerTurn)
+                                        {
+                                            move = true;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (i - 1 >= 0 && j > 0)
+                                {
+                                    if (_piecePositions[i - 1, j - 1] == null)
+                                    {
+                                        move = true;
+                                    }
+                                    else if (i - 1 > 0 && j - 1 > 0)
+                                    {
+                                        if (_piecePositions[i - 2, j - 2] == null && _piecePositions[i - 1, j - 1].Player() != playerTurn)
+                                        {
+                                            move = true;
+                                        }
+                                    }
+                                }
+                                if (i + 1 < 8 && j > 0)
+                                {
+                                    if (_piecePositions[i + 1, j - 1] == null)
+                                        move = true;
+                                    else if (i + 2 < 8 && j - 1 > 0)
+                                    {
+                                        if (_piecePositions[i + 2, j - 2] == null && _piecePositions[i + 1, j - 1].Player() != playerTurn)
+                                        {
+                                            move = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             return move;
         }
         public bool MouseClicked(MouseState mouse, int playerTurn)

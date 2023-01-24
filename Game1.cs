@@ -348,6 +348,13 @@ namespace Connect_four
                             playerTurn = 2;
                         else
                             playerTurn = 1;
+                        if (!checkerBoard.CanMove(playerTurn))
+                        {
+                            if (playerTurn == 1)
+                                playerTurn = 2;
+                            else
+                                playerTurn = 1;
+                        }
                     }
 
                 }
@@ -355,6 +362,12 @@ namespace Connect_four
                 {
                     screen = Screen.Menu;
                     this.Window.Title = "Mini Arcade Menu";
+                }
+                else if(gameWon && keyboardState.IsKeyDown(Keys.R))
+                {
+                    checkerBoard.ResetGame(circleTex, circleTex);
+                    gameWon = false;
+                    playerTurn = 1;
                 }
             }
             else if (screen == Screen.BuildingJumper){
