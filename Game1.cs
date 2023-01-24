@@ -39,15 +39,14 @@ namespace Connect_four
             Checkers,
             ShogiInstructions,
             CheckersInstructions,
-            HunterWilsonEasterEgg
+            HunterWilsonEasterEgg,
+            BuildingJumperInstructions
         }
         Screen screen;
 
         //Menu Variables:
-        Texture2D connect4Play;
-        Texture2D pacPlay;
-        Rectangle pacPlayRect;
-        Rectangle c4Rect;
+        List<Texture2D> menuTex;
+        List<Rectangle> menuRects;
 
         // Connect 4 variables:
         bool undoC4Move;
@@ -121,8 +120,6 @@ namespace Connect_four
             _graphics.ApplyChanges();
             temp = true;
             undoC4Move = false;
-            c4Rect = new Rectangle(450, 290, 200, 200);
-            pacPlayRect = new Rectangle(150, 290, 200, 200);
             rand = new Random();
 
             //Lists
@@ -135,6 +132,14 @@ namespace Connect_four
             shogiPieceTextures = new List<Texture2D>();
             buttonTextures = new List<Texture2D>();
             pieceColors = new List<Color>();
+            menuTex = new List<Texture2D>();
+            menuRects = new List<Rectangle>();
+
+            menuRects.Add(new Rectangle(100, 200, 150, 150));
+            menuRects.Add(new Rectangle(300, 200, 150, 150));
+            menuRects.Add(new Rectangle(500, 200, 150, 150));
+            menuRects.Add(new Rectangle(200, 450, 150, 150));
+            menuRects.Add(new Rectangle(400, 450, 150, 150));
 
             pieceColors.Add(Color.Red);
             pieceColors.Add(Color.Green);
@@ -177,14 +182,20 @@ namespace Connect_four
             coinSound = Content.Load<SoundEffect>("ding");
             easterEgg = Content.Load<Texture2D>("Hunter");
 
+            menuTex.Add(Content.Load<Texture2D>("Connect4Play"));
+            menuTex.Add(Content.Load<Texture2D>("pacPlay"));
+            menuTex.Add(Content.Load<Texture2D>("checkers"));
+            menuTex.Add(Content.Load<Texture2D>("shogi"));
+            menuTex.Add(Content.Load<Texture2D>("bunnyJump"));
+            menuTex.Add(Content.Load<Texture2D>("arcadeBG"));
+
+
             buttonTextures.Add(Content.Load<Texture2D>("close_box_red"));
             buttonTextures.Add(Content.Load<Texture2D>("questionIcon"));
             buttonTextures.Add(Content.Load<Texture2D>("save"));
             buttonTextures.Add(Content.Load<Texture2D>("download"));
-            gameBoard = Content.Load<Texture2D>("Connect4Board");
-            pacPlay = Content.Load<Texture2D>("pacPlay");
-            connect4Play = Content.Load<Texture2D>("Connect4Play");
             gamePiece = Content.Load<Texture2D>("circle");
+            gameBoard = Content.Load<Texture2D>("Connect4Board");
 
             pacDown = Content.Load<Texture2D>("HelmetDown");
             pacUp = Content.Load<Texture2D>("HelmetUp");
@@ -252,9 +263,10 @@ namespace Connect_four
                 if(mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                     if(rand.Next(10) == 0)
                     {
+                        temp = true;
                         screen = Screen.HunterWilsonEasterEgg;
                     }
-                    else if (c4Rect.Contains(mouseState.X, mouseState.Y)){
+                    else if (menuRects[0].Contains(mouseState.X, mouseState.Y)){
                         screen = Screen.Connect4;
                         winner = 0;
                         playerTurn = 1;
@@ -264,7 +276,7 @@ namespace Connect_four
                         this.Window.Title = "Connect 4";
                         board.ColorsSet(pieceColors, rand);
                     }
-                    else if (pacPlayRect.Contains(mouseState.X, mouseState.Y)){
+                    else if (menuRects[1].Contains(mouseState.X, mouseState.Y)){
                         this.Window.Title = "Pacman";
                         gameWon = false;
                         powerUp = false;
@@ -276,12 +288,31 @@ namespace Connect_four
                         Coin.SetCoins(coins, coinTex, barriers);
                         PowerUpBerry.BerrySet(berries, circleTex, coins);
                     }
-                }
-                else if (keyboardState.IsKeyDown(Keys.L)){
-                    screen = Screen.BuildingJumper;
-                    buildings.Clear();
-                    buildings.Add(new Building(buildingTextures[0], _graphics));
-                    score = 0;
+                    else if (menuRects[2].Contains(mouseState.X, mouseState.Y))
+                    {
+                        this.Window.Title = "Checkers";
+                        gameWon = false;
+                        winner = 0;
+                        screen = Screen.CheckersInstructions;
+                    }
+                    else if (menuRects[3].Contains(mouseState.X, mouseState.Y))
+                    {
+                        this.Window.Title = "Shogi";
+                        gameWon = false;
+                        winner = 0;
+                        screen = Screen.ShogiInstructions;
+                    }
+                    else if (menuRects[4].Contains(mouseState.X, mouseState.Y))
+                    {
+                        this.Window.Title = "BuildingJumper";
+                        gameWon = false;
+                        winner = 0;
+                        screen = Screen.BuildingJumperInstructions;
+                        buildings.Clear();
+                        buildings.Add(new Building(buildingTextures[0], _graphics));
+                        score = 0;
+                        rabbitJumper.Reset(_graphics);
+                    }
                 }
             }
             else if(screen == Screen.Shogi){
@@ -300,7 +331,11 @@ namespace Connect_four
                         gameWon = true;
                         winner = playerTurn;
                     }
-                    
+                }
+                else if (keyboardState.IsKeyDown(Keys.C))
+                {
+                    screen = Screen.Menu;
+                    this.Window.Title = "Mini Arcade Menu";
                 }
             }
             else if(screen == Screen.Checkers){
@@ -315,6 +350,11 @@ namespace Connect_four
                             playerTurn = 1;
                     }
 
+                }
+                else if (keyboardState.IsKeyDown(Keys.C))
+                {
+                    screen = Screen.Menu;
+                    this.Window.Title = "Mini Arcade Menu";
                 }
             }
             else if (screen == Screen.BuildingJumper){
@@ -561,14 +601,58 @@ namespace Connect_four
             else if(screen == Screen.Connect4Help){
                 if(mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released){
                     if (closeButton.Clicked(mouseState))
+                    {
                         screen = Screen.Connect4;
-                    this.Window.Title = "Connect 4";
+                        this.Window.Title = "Connect 4";
+                    }
                 }
             }
             else if(screen == Screen.HunterWilsonEasterEgg)
             {
+                if (temp)
+                {
+                    gameOverInstance.Play();
+                    temp = false;
+                }
                 this.Window.Title = "Welcome To The Hunter Easter Egg, Press C to Close";
                 if (keyboardState.IsKeyDown(Keys.C)){
+                    screen = Screen.Menu;
+                    this.Window.Title = "Mini Arcade Menu";
+                    temp = true;
+                }
+            }
+            else if (screen == Screen.CheckersInstructions)
+            {
+                if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released) || keyboardState.IsKeyDown(Keys.Enter))
+                {
+                    screen = Screen.Checkers;
+                }
+                else if (keyboardState.IsKeyDown(Keys.C))
+                {
+                    screen = Screen.Menu;
+                    this.Window.Title = "Mini Arcade Menu";
+                }
+            }
+            else if (screen == Screen.ShogiInstructions)
+            {
+                if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released) || keyboardState.IsKeyDown(Keys.Enter))
+                {
+                    screen = Screen.Shogi;
+                }
+                else if (keyboardState.IsKeyDown(Keys.C))
+                {
+                    screen = Screen.Menu;
+                    this.Window.Title = "Mini Arcade Menu";
+                }
+            }
+            else if (screen == Screen.BuildingJumperInstructions)
+            {
+                if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released) || keyboardState.IsKeyDown(Keys.Enter))
+                {
+                    screen = Screen.BuildingJumper;
+                }
+                else if (keyboardState.IsKeyDown(Keys.C))
+                {
                     screen = Screen.Menu;
                     this.Window.Title = "Mini Arcade Menu";
                 }
@@ -580,11 +664,14 @@ namespace Connect_four
         {
             _spriteBatch.Begin();
             if (screen == Screen.Menu){
-                GraphicsDevice.Clear(Color.Turquoise);
-                _spriteBatch.DrawString(font, "Welcome to the mini ", new Vector2(30, 20), Color.Black);
-                _spriteBatch.DrawString(font, "Arcade", new Vector2(280, 90), Color.Black);
-                _spriteBatch.Draw(pacPlay, pacPlayRect, Color.White);
-                _spriteBatch.Draw(connect4Play, c4Rect, Color.White);
+                GraphicsDevice.Clear(Color.Chartreuse);
+                _spriteBatch.Draw(menuTex[5], new Rectangle(0, 0, 800, 700), Color.White);
+                _spriteBatch.DrawString(font, "Welcome to the mini ", new Vector2(30, 20), Color.White);
+                _spriteBatch.DrawString(font, "Arcade", new Vector2(280, 90), Color.White);
+                for (int i = 0; i< menuRects.Count; i++)
+                {
+                    _spriteBatch.Draw(menuTex[i], menuRects[i], Color.White);
+                }
             }
             else if(screen == Screen.Shogi)
             {
@@ -622,7 +709,7 @@ namespace Connect_four
             }
             else if (screen == Screen.PacmanInstructions){
                 GraphicsDevice.Clear(Color.White);
-                _spriteBatch.DrawString(font, "Instructions", new Vector2(230, 20), Color.Black);
+                _spriteBatch.DrawString(font, "Pacman Instructions", new Vector2(20, 20), Color.Black);
                 _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click or press Enter to start the game\nAfter the game ends press R to restart or C to close\nGrab a power berry to get ghost eating powers for 5 seconds\nChoose the difficulty:\n1 for Hell\n2 for Normal (default) \n3 for Hacker Mode\n4 for Random Speeds\n'L' for exploration mode\n\nPress A for ant size\nPress N for normal size (default)", new Vector2(10, 120), Color.Black);
             }
             else if(screen == Screen.Pacman){
@@ -706,7 +793,25 @@ namespace Connect_four
                 GraphicsDevice.Clear(Color.Turquoise);
                 _spriteBatch.Draw(easterEgg, new Rectangle(100,50,600,600), Color.White);
             }
-            
+            else if (screen == Screen.CheckersInstructions)
+            {
+                GraphicsDevice.Clear(Color.White);
+                _spriteBatch.DrawString(font, "Checkers Instructions", new Vector2(0, 20), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\nPieces can move diagonally\n", new Vector2(10, 120), Color.Black);
+            }
+            else if (screen == Screen.ShogiInstructions)
+            {
+                GraphicsDevice.Clear(Color.White);
+                _spriteBatch.DrawString(font, "Shogi Instructions", new Vector2(20, 20), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\n", new Vector2(10, 120), Color.Black);
+            }
+            else if (screen == Screen.BuildingJumperInstructions)
+            {
+                GraphicsDevice.Clear(Color.White);
+                _spriteBatch.DrawString(font, "Jumper Instructions", new Vector2(20, 20), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\n", new Vector2(10, 120), Color.Black);
+            }
+
             _spriteBatch.End();
             base.Draw(gameTime);
         }
