@@ -91,6 +91,8 @@ namespace Connect_four
         Jumper rabbitJumper;
         Texture2D rabbitTex;
         int score;
+        int high_score;
+        int highScore;
 
         //Shogi
         List<Texture2D> shogiPieceTextures;
@@ -111,9 +113,7 @@ namespace Connect_four
             //Menu and General vars
             this.Window.Title = "Mini Arcade Menu";
             screen = Screen.Menu;
-            //
-            //screen = Screen.Shogi;
-            //screen = Screen.Checkers;
+            highScore = 0;
             playerTurn = 1;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 700;
@@ -314,6 +314,13 @@ namespace Connect_four
                         buildings.Add(new Building(buildingTextures[0], _graphics));
                         score = 0;
                         rabbitJumper.Reset(_graphics);
+                        if (File.Exists("highScore.txt"))
+                        {
+                            foreach (string line in File.ReadLines("highScore.txt"))
+                            high_score = Convert.ToInt32(line);
+                        }
+                        else
+                            high_score = 0;
                     }
                 }
             }
@@ -396,6 +403,18 @@ namespace Connect_four
                         if (buildings[i].Location().Intersects(rabbitJumper.Location())){
                             gameWon = true;
                             gameOverInstance.Play();
+                            if (score > high_score)
+                            {
+                                highScore = score;
+                                high_score = score;
+                                StreamWriter writer = new StreamWriter("highScore.txt");
+                                writer.WriteLine(score);
+                                writer.Close();
+                            }
+                            else if( score > highScore)
+                            {
+                                highScore = score;
+                            }
                         }
                         else if (buildings[i].Location().Right < 0){
                             buildings.Add(new Building(buildingTextures[rand.Next(0, 5)], _graphics, rand.Next(2,4), rand.Next(170,211)));
@@ -745,6 +764,9 @@ namespace Connect_four
             else if(screen == Screen.BuildingJumper)
             {
                 GraphicsDevice.Clear(Color.Turquoise);
+                _spriteBatch.DrawString(mediumFont, $"Buildings Jumped: {score}", new Vector2(0, 0), Color.Black);
+                _spriteBatch.DrawString(mediumFont, $"High Score: {highScore}", new Vector2(0, 60), Color.Black);
+                _spriteBatch.DrawString(mediumFont, $"All Time High Score: {high_score}", new Vector2(0, 120), Color.Black);
                 foreach (Building b in buildings)
                     b.Draw(_spriteBatch);
                 rabbitJumper.Draw(_spriteBatch);
