@@ -40,9 +40,16 @@ namespace Connect_four
             p2Bench = new ShogiBench(textures, font, 725, 120, 2);
             //Empty Spaces
             _boardPositions = new int[9, 9];
-            for (int i = 0; i < 9; i++)
-                for (int j = 0; j < 9; j++)
-                    _boardPositions[i, j] = 0;
+            
+            ResetGame(textures);
+
+            p1Bench.ClonePiece(_pieces[0, 6].Clone(), _pieces[0, 8].Clone(), _pieces[1, 8].Clone(), _pieces[2, 8].Clone(), _pieces[3, 8].Clone(), _pieces[1, 7].Clone(), _pieces[7, 7].Clone());
+            p2Bench.ClonePiece(_pieces[0, 2].Clone(), _pieces[0, 0].Clone(), _pieces[1, 0].Clone(), _pieces[2, 0].Clone(), _pieces[3, 0].Clone(), _pieces[7, 1].Clone(), _pieces[1, 1].Clone());
+
+        }
+        public void ResetGame(List<Texture2D> textures)
+        {
+            ResetSquareBoard();
             //Seting up board
             _pieces = new ShogiPiece[9, 9];
             for (int i = 0; i < 9; i++)//Pawn
@@ -73,9 +80,6 @@ namespace Connect_four
             _pieces[1, 1] = new ShogiPiece(textures[13], textures[14], textures[27], textures[28], 7, 2);//Rook
             _pieces[4, 8] = new ShogiPiece(textures[15], textures[16], textures[15], textures[16], 8, 1);//King
             _pieces[4, 0] = new ShogiPiece(textures[15], textures[16], textures[15], textures[16], 8, 2);//King
-
-            p1Bench.ClonePiece(_pieces[0, 6].Clone(), _pieces[0, 8].Clone(), _pieces[1, 8].Clone(), _pieces[2, 8].Clone(), _pieces[3, 8].Clone(), _pieces[1, 7].Clone(), _pieces[7, 7].Clone());
-            p2Bench.ClonePiece(_pieces[0, 2].Clone(), _pieces[0, 0].Clone(), _pieces[1, 0].Clone(), _pieces[2, 0].Clone(), _pieces[3, 0].Clone(), _pieces[7, 1].Clone(), _pieces[1, 1].Clone());
 
         }
 

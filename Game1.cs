@@ -291,14 +291,18 @@ namespace Connect_four
                         this.Window.Title = "Checkers";
                         gameWon = false;
                         winner = 0;
+                        playerTurn = 1;
                         screen = Screen.CheckersInstructions;
+                        checkerBoard.ResetGame(circleTex, circleTex);
                     }
                     else if (menuRects[3].Contains(mouseState.X, mouseState.Y))
                     {
                         this.Window.Title = "Shogi";
                         gameWon = false;
                         winner = 0;
+                        playerTurn = 1;
                         screen = Screen.ShogiInstructions;
+                        shogiBoard.ResetGame(shogiPieceTextures);
                     }
                     else if (menuRects[4].Contains(mouseState.X, mouseState.Y))
                     {
@@ -335,6 +339,13 @@ namespace Connect_four
                     screen = Screen.Menu;
                     this.Window.Title = "Mini Arcade Menu";
                 }
+                else if(keyboardState.IsKeyDown(Keys.R))
+                {
+                    shogiBoard.ResetGame(shogiPieceTextures);
+                    gameWon = false;
+                    playerTurn = 1;
+                    winner = 0;
+                }
             }
             else if(screen == Screen.Checkers){
                 if (!gameWon && mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
@@ -342,6 +353,11 @@ namespace Connect_four
                     this.Window.Title = $"p: {playerTurn} gw{gameWon} mclick{mouseState.LeftButton == ButtonState.Pressed}";
                     if (checkerBoard.MouseClicked(mouseState, playerTurn))
                     {
+                        if (checkerBoard.GameWon(playerTurn))
+                        {
+                            gameWon = true;
+                            winner = playerTurn;
+                        }
                         if (playerTurn == 1)
                             playerTurn = 2;
                         else
@@ -370,7 +386,9 @@ namespace Connect_four
             }
             else if (screen == Screen.BuildingJumper){
                 this.Window.Title = $"Rabbit Jumper, Buildings Jumped: {score}";
-                if (!gameWon){
+                if (keyboardState.IsKeyDown(Keys.C))
+                    screen = Screen.Menu;
+                else if (!gameWon){
                     rabbitJumper.Update(keyboardState, _graphics);
                     for (int i = 0; i < buildings.Count; i++)
                     {
@@ -387,19 +405,13 @@ namespace Connect_four
                         }
                     }
                 }
-                else{
-                    if (keyboardState.IsKeyDown(Keys.R)){
-                        gameWon = false; 
-                        score= 0;
-                        rabbitJumper.Reset(_graphics);
-                        buildings.Clear();
-                        buildings.Add(new Building(buildingTextures[0], _graphics));
-                    }
-                    else if (keyboardState.IsKeyDown(Keys.C)){
-                        screen = Screen.Menu;
-                    }
+                else if (keyboardState.IsKeyDown(Keys.R)){
+                    gameWon = false;
+                    score = 0;
+                    rabbitJumper.Reset(_graphics);
+                    buildings.Clear();
+                    buildings.Add(new Building(buildingTextures[0], _graphics));
                 }
-                
             }
             else if (screen == Screen.PacmanInstructions){
                 if ((mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released) || keyboardState.IsKeyDown(Keys.Enter)){
@@ -692,20 +704,43 @@ namespace Connect_four
                 {
                     if (winner == 1)
                     {
-                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(102, 7), Color.Gold);
-                        _spriteBatch.DrawString(font, "Player 1 Won", new Vector2(105, 10), Color.Red);
+                        _spriteBatch.DrawString(mediumFont, "Player 1 Won", new Vector2(192, 7), Color.Gold);
+                        _spriteBatch.DrawString(mediumFont, "Player 1 Won", new Vector2(195, 10), Color.Red);
                     }
                     else if (winner == 2)
                     {
-                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(102, 7), Color.Gold);
-                        _spriteBatch.DrawString(font, "Player 2 Won", new Vector2(105, 10), Color.Black);
+                        _spriteBatch.DrawString(mediumFont, "Player 2 Won", new Vector2(192, 7), Color.Gold);
+                        _spriteBatch.DrawString(mediumFont, "Player 2 Won", new Vector2(195, 10), Color.Black);
                     }
+                }
+                else
+                {
+                    if (playerTurn == 1)
+                        _spriteBatch.DrawString(mediumFont, "Player 1's Turn", new Vector2(170, 10), Color.Red);
+                    else if (playerTurn == 2)
+                        _spriteBatch.DrawString(mediumFont, "Player 2's Turn", new Vector2(170, 10), Color.Black);
                 }
             }
             else if(screen == Screen.Checkers)
             {
                 GraphicsDevice.Clear(Color.DarkGray);
                 checkerBoard.Draw(_spriteBatch);
+                if (gameWon){
+                    if (winner == 1){
+                        _spriteBatch.DrawString(mediumFont, "Player 1 Won", new Vector2(222, 7), Color.Gold);
+                        _spriteBatch.DrawString(mediumFont, "Player 1 Won", new Vector2(225, 10), Color.Red);
+                    }
+                    else if (winner == 2){
+                        _spriteBatch.DrawString(mediumFont, "Player 2 Won", new Vector2(222, 7), Color.Gold);
+                        _spriteBatch.DrawString(mediumFont, "Player 2 Won", new Vector2(225, 10), Color.Black);
+                    }
+                }
+                else{
+                    if (playerTurn == 1)
+                        _spriteBatch.DrawString(mediumFont, "Player 1's Turn", new Vector2(200, 10), Color.Red);
+                    else if (playerTurn == 2)
+                        _spriteBatch.DrawString(mediumFont, "Player 2's Turn", new Vector2(200, 10), Color.Black);
+                }
             }
             else if(screen == Screen.BuildingJumper)
             {
@@ -808,19 +843,19 @@ namespace Connect_four
             {
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Checkers Instructions", new Vector2(0, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\nPieces can move diagonally\n", new Vector2(10, 120), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\nPieces can move diagonally\nClick a Piece to Move it\nPress C to Close\nPress R to restart after a game finishes\nCan ONLY single Jump", new Vector2(10, 130), Color.Black);
             }
             else if (screen == Screen.ShogiInstructions)
             {
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Shogi Instructions", new Vector2(20, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\n", new Vector2(10, 120), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\nClick a Piece to Move it\nPress C to Close\nPress R to restart after a game finishes", new Vector2(10, 130), Color.Black);
             }
             else if (screen == Screen.BuildingJumperInstructions)
             {
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Jumper Instructions", new Vector2(20, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\n", new Vector2(10, 120), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\nMove Left and Right with the arrow keys\nPress space or up to jump\nIf you hit a building you Lose\nPress C to Close", new Vector2(10, 130), Color.Black);
             }
 
             _spriteBatch.End();

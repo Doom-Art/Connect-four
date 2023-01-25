@@ -112,6 +112,14 @@ namespace Connect_four
         }
         public bool GameWon(int playerTurn)
         {
+            if(playerTurn == 1)
+            {
+                playerTurn = 2;
+            }
+            else
+            {
+                playerTurn = 1;
+            }
             bool won = true;
             for (int i = 0; i <8; i++)
                 for (int j = 0; j<8; j++)
