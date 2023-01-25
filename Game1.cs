@@ -145,13 +145,11 @@ namespace Connect_four
             pieceColors.Add(Color.Green);
             pieceColors.Add(Color.Blue);
             pieceColors.Add(Color.Black);
-            pieceColors.Add(Color.HotPink);
             pieceColors.Add(Color.Purple);
             pieceColors.Add(Color.Tomato);
-            pieceColors.Add(Color.LightSeaGreen);
             pieceColors.Add(Color.Chartreuse);
             pieceColors.Add(Color.Gray);
-            pieceColors.Add(Color.Fuchsia);
+            pieceColors.Add(Color.Navy);
 
             base.Initialize();
             closeButton = new Button(buttonTextures[0], new Rectangle(740, 20, 50, 50));

@@ -301,12 +301,14 @@ namespace Connect_four
                                 moved = true;
                                 _isPieceClicked = false;
                                 ResetBoard();
+                                _piecesToTake.Clear();
                             }
                             else
                             {
                                 xTake = -1;
                                 _isPieceClicked = false;
                                 ResetBoard();
+                                _piecesToTake.Clear();
                             }
                         }
             }
