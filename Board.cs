@@ -289,9 +289,9 @@ namespace Connect_four
                 writer.WriteLine(temp);
             }
         }
-        public int LoadGame(string txtFileName, List<Color> colors)
+        public int LoadGame(string txtFileName, List<Color> colors, int player)
         {
-            int playerTurn = 0;
+            int playerTurn = player;
             int j = 0;
             int lineNum = 0;
             prevX = -1;
