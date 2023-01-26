@@ -39,7 +39,7 @@ namespace Connect_four
         }
         public static void GenerateGhosts(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight)
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 1; i++)
             {
                 list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
                 list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45), Color.Green));
@@ -47,7 +47,7 @@ namespace Connect_four
                 list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(160, 480, 45, 45), Color.Red));
                 list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45), Color.Turquoise));
             }
-            for (int i = 0; i < 0; i++)
+            for (int i = 0; i < 100; i++)
             {
                 list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(7, 650, 45, 45), Color.Orange));
             }
