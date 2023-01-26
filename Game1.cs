@@ -587,9 +587,7 @@ namespace Connect_four
                         writer.Close();
                     }
                     else if (!gameWon && loadButton.Clicked(mouseState)){
-                        if (File.Exists("saved.txt")){
-                            playerTurn = board.LoadGame("saved.txt", pieceColors);
-                        }
+                        playerTurn = board.LoadGame("saved.txt", pieceColors);
                     }
                     else if (!gameWon && seconds > .8){
                         if (board.PlayerTurn(mouseState, playerTurn)){

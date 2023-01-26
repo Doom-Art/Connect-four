@@ -295,32 +295,36 @@ namespace Connect_four
             int j = 0;
             int lineNum = 0;
             prevX = -1;
-            foreach (string line in File.ReadLines(@txtFileName))
+            if (File.Exists(txtFileName))
             {
-                if (lineNum == 0)
+                foreach (string line in File.ReadLines(@txtFileName))
                 {
-                    Int32.TryParse(line, out playerTurn);
-                    lineNum++;
-                }
-                else if(lineNum == 1)
-                {
-                    p1Color = colors[Convert.ToInt32(line)];
-                    lineNum++;
-                }
-                else if(lineNum == 2)
-                {
-                    p2Color = colors[Convert.ToInt32(line)];
-                    lineNum++;
-                }
-                else{
-                    for (int i = 0; i < 7; i++)
+                    if (lineNum == 0)
                     {
-                        string temp = "";
-                        temp += line[i];
-                        Int32.TryParse(temp, out int d);
-                        _boardPositions[i, j] = d;
+                        Int32.TryParse(line, out playerTurn);
+                        lineNum++;
                     }
-                    j++;
+                    else if (lineNum == 1)
+                    {
+                        p1Color = colors[Convert.ToInt32(line)];
+                        lineNum++;
+                    }
+                    else if (lineNum == 2)
+                    {
+                        p2Color = colors[Convert.ToInt32(line)];
+                        lineNum++;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < 7; i++)
+                        {
+                            string temp = "";
+                            temp += line[i];
+                            Int32.TryParse(temp, out int d);
+                            _boardPositions[i, j] = d;
+                        }
+                        j++;
+                    }
                 }
             }
             return playerTurn;
