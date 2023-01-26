@@ -85,7 +85,7 @@ namespace Connect_four
         SoundEffectInstance gameWonInstance;
         SoundEffect coinSound;
 
-        //Building Jumper Lua Game
+        //Building Jumper 
         List<Building> buildings;
         List<Texture2D> buildingTextures;
         Jumper rabbitJumper;
@@ -781,7 +781,7 @@ namespace Connect_four
                 _spriteBatch.DrawString(smallFont, "Use the Arrow keys to move Pacman around\nCollect all the coins to win\nYou lose if you touch a ghost\nLeft Click or press Enter to start the game\nAfter the game ends press R to restart or C to close\nGrab a power berry to get ghost eating powers for 5 seconds\nChoose the difficulty:\n1 for Hell\n2 for Normal (default) \n3 for Hacker Mode\n4 for Random Speeds\n'L' for exploration mode\n\nPress A for ant size\nPress N for normal size (default)", new Vector2(10, 120), Color.Black);
             }
             else if(screen == Screen.Pacman){
-                GraphicsDevice.Clear(Color.Turquoise);
+                GraphicsDevice.Clear(Color.DeepSkyBlue);
                 pacman.Draw(_spriteBatch);
                 foreach (Barrier b in barriers)
                     b.Draw(_spriteBatch);

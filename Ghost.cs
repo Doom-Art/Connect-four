@@ -39,12 +39,33 @@ namespace Connect_four
         }
         public static void GenerateGhosts(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight)
         {
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45), Color.Green));
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(85, 547, 45, 45), Color.Purple));
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(160, 480, 45, 45), Color.Red));
-            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45), Color.Turquoise));
-            //list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(7, 650, 45, 45), Color.Orange));
+            for (int i = 0; i < 2; i++)
+            {
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45), Color.Green));
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(85, 547, 45, 45), Color.Purple));
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(160, 480, 45, 45), Color.Red));
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45), Color.Turquoise));
+            }
+            for (int i = 0; i < 0; i++)
+            {
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(7, 650, 45, 45), Color.Orange));
+            }
+        }
+        public static void GenerateGhosts(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight, int numGhosts)
+        {
+            for (int i = 0; i < numGhosts; i++)
+            {
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45), Color.Green));
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(85, 547, 45, 45), Color.Purple));
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(160, 480, 45, 45), Color.Red));
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45), Color.Turquoise));
+            }
+            for (int i = 0; i < numGhosts; i++)
+            {
+                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(7, 650, 45, 45), Color.Orange));
+            }
         }
         public static void GenerateOneGhost(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight)
         {
