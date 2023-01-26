@@ -39,19 +39,19 @@ namespace Connect_four
         }
         public static void GenerateGhosts(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight)
         {
-            for (int i = 0; i < 1; i++)
-            {
-                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
-                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45), Color.Green));
-                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(85, 547, 45, 45), Color.Purple));
-                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(160, 480, 45, 45), Color.Red));
-                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45), Color.Turquoise));
-            }
-            for (int i = 0; i < 100; i++)
-            {
-                list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(7, 650, 45, 45), Color.Orange));
-            }
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(638, 542, 45, 45), Color.Green));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(85, 547, 45, 45), Color.Purple));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(160, 480, 45, 45), Color.Red));
+            list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(222, 261, 45, 45), Color.Turquoise));
         }
+        /// <summary>
+        /// Generates multiple copies of each ghost
+        /// </summary>
+        /// <param name="list">list of ghosts</param>
+        /// <param name="ghostLeft">tex of ghost looking left</param>
+        /// <param name="ghostRight">tex of ghost looking right</param>
+        /// <param name="numGhosts">how many copies of each ghost to make</param>
         public static void GenerateGhosts(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight, int numGhosts)
         {
             for (int i = 0; i < numGhosts; i++)
@@ -67,15 +67,15 @@ namespace Connect_four
                 list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(7, 650, 45, 45), Color.Orange));
             }
         }
+        /// <summary>
+        /// Generates a single ghost
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="ghostLeft"></param>
+        /// <param name="ghostRight"></param>
         public static void GenerateOneGhost(List<Ghost> list, Texture2D ghostLeft, Texture2D ghostRight)
         {
             list.Add(new Ghost(ghostLeft, ghostRight, new Rectangle(732, 632, 45, 45)));
-        }
-        public void Reset()
-        {
-            _currentTex = _leftTexture;
-            _speed = new Vector2 (-2,0);
-            _location = new Rectangle(732, 632, 45, 45);
         }
         public void Move()
         {
@@ -108,10 +108,19 @@ namespace Connect_four
                 }
             }
         }
+        /// <summary>
+        /// Draws the ghost when not on power berry
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_currentTex, _location, _colorMask);
         }
+        /// <summary>
+        /// Draws the ghost when using power berry
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="test">true is flash, false is blue</param>
         public void Draw(SpriteBatch spriteBatch, bool test)
         {
             if(test)
