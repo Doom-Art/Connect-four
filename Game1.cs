@@ -871,13 +871,13 @@ namespace Connect_four
             {
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Shogi Instructions", new Vector2(20, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\nClick a Piece to Move it\nPress C to Close\nPress R to restart after a game finishes", new Vector2(10, 130), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\nClick a Piece to Move it\nPress C to Close\nPress R to restart after a game finishes\nYou win if you get the opponents King", new Vector2(10, 130), Color.Black);
             }
             else if (screen == Screen.BuildingJumperInstructions)
             {
                 GraphicsDevice.Clear(Color.White);
                 _spriteBatch.DrawString(font, "Jumper Instructions", new Vector2(20, 20), Color.Black);
-                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\nMove Left and Right with the arrow keys\nPress space or up to jump\nIf you hit a building you Lose\nPress C to Close", new Vector2(10, 130), Color.Black);
+                _spriteBatch.DrawString(smallFont, "Left Click or press Enter to start\nMove Left and Right with the arrow keys\nPress space or up to jump\nIf you hit a building you Lose\nPress C to Close\nPress R to Restart", new Vector2(10, 130), Color.Black);
             }
 
             _spriteBatch.End();
