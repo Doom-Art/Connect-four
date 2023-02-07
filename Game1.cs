@@ -417,7 +417,7 @@ namespace Connect_four
                             }
                         }
                         else if (buildings[i].Location().Right < 0){
-                            buildings.Add(new Building(buildingTextures[rand.Next(0, buildingTextures.Count)], _graphics, rand.Next(2,7), rand.Next(160,222)));
+                            buildings.Add(new Building(buildingTextures[rand.Next(0, buildingTextures.Count)], _graphics, rand.Next(2,6), rand.Next(160,222)));
                             buildings.RemoveAt(i);
                             i--;
                             score++;
